@@ -35,18 +35,16 @@ public class MainActivity extends Activity {
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
-		findViewById(R.id.txtviews1).setOnTouchListener(new MyTouchListener());
-		findViewById(R.id.txtviews2).setOnTouchListener(new MyTouchListener());
-		findViewById(R.id.txtviews3).setOnTouchListener(new MyTouchListener());
-		findViewById(R.id.txtviews4).setOnTouchListener(new MyTouchListener());
-		findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
-		findViewById(R.id.topright).setOnDragListener(new MyDragListener());
-		findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener());
-		findViewById(R.id.bottomright).setOnDragListener(new MyDragListener());
-		findViewById(R.id.target1).setOnDragListener(new MyDropListener());
-		findViewById(R.id.target2).setOnDragListener(new MyDropListener());
-		findViewById(R.id.target3).setOnDragListener(new MyDropListener());
-		findViewById(R.id.target4).setOnDragListener(new MyDropListener());
+	    ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
+		int i;
+		for(i=0;i<ll.getChildCount();i++){
+			ll.getChildAt(i).setOnDragListener(new MyDragListener());
+			((LinearLayout)ll.getChildAt(i)).getChildAt(0).setOnTouchListener(new MyTouchListener());
+		}
+		ll =(ViewGroup)findViewById(R.id.dropzones);
+		for(i=0;i<ll.getChildCount();i++){
+			ll.getChildAt(i).setOnDragListener(new MyDropListener());
+		}
 		Button bt=(Button)findViewById(R.id.btnConfirm);
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);

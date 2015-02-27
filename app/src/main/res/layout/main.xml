@@ -3,73 +3,84 @@
 	android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:orientation="vertical"
-	android:id="@+id/dropzones"
+	
 >
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="250dp"
+		android:layout_height="0dp"
+		android:layout_weight="1"
 		android:orientation="horizontal"
+		android:id="@+id/dropzones"
 	>
 
 		<LinearLayout
 			android:id="@+id/target1"
-			android:layout_width="90dp"
-			android:layout_height="160dp"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="fill_parent"
 			android:background="@drawable/shape" >
 
 			<TextView
+				android:textSize="20sp"
 				android:id="@+id/txtviewt1"
 				android:layout_width="fill_parent"
-				android:layout_gravity="center"
+				android:gravity="center"
 				android:layout_height="fill_parent"
 				android:text="@string/graze" />
 		</LinearLayout>
 
 		<LinearLayout
 			android:id="@+id/target2"
-			android:layout_width="90dp"
-			android:layout_height="160dp"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="fill_parent"
 			android:background="@drawable/shape" >
 
 			<TextView
+				android:textSize="20sp"
 				android:id="@+id/txtview2"
 				android:layout_width="fill_parent"
-				android:layout_gravity="center"
+				android:gravity="center"
 				android:layout_height="fill_parent"
 				android:text="@string/rest" />
 		</LinearLayout>
 
 		<LinearLayout
 			android:id="@+id/target3"
-			android:layout_width="90dp"
-			android:layout_height="160dp"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="fill_parent"
 			android:background="@drawable/shape" >
 
 			<TextView
+				android:textSize="20sp"
 				android:id="@+id/txtview3"
 				android:layout_width="fill_parent"
-				android:layout_gravity="center"
+				android:gravity="center"
 				android:layout_height="fill_parent"
 				android:text="@string/walk" />
 		</LinearLayout>
 
 		<LinearLayout
 			android:id="@+id/target4"
-			android:layout_width="90dp"
-			android:layout_height="160dp"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="fill_parent"
 			android:background="@drawable/shape" >
 
 
 			<TextView
+				android:textSize="20sp"
 				android:id="@+id/txtview4"
 				android:layout_width="fill_parent"
-				android:layout_gravity="center"
+				android:gravity="center"
 				android:layout_height="fill_parent"
 				android:text="@string/other" />
 		</LinearLayout></LinearLayout>
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="200dp"
+			android:layout_height="0dp"
+			android:layout_weight="2"
 			android:orientation="vertical"
 			android:gravity="center"
 		>
@@ -128,35 +139,38 @@
 		</LinearLayout>
 <LinearLayout
 	android:layout_width="match_parent"
-    android:layout_height="160dp"
-   android:orientation="horizontal"
+    android:layout_height="0dp"
+	android:layout_weight="1"
+   	android:orientation="horizontal"
 	android:gravity="bottom"
 	android:id="@+id/dragzones">
 
     <LinearLayout
         android:id="@+id/topleft"
-		android:layout_width="90dp"
-        android:layout_height="150dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
+        android:layout_height="fill_parent"
        android:background="@drawable/shape" >
 
         <TextView
             android:id="@+id/txtviews1"
             android:layout_width="fill_parent"
-			android:layout_gravity="center"
+			android:gravity="center"
 			android:layout_height="fill_parent"
 			android:textSize="20sp"
 			android:text="240" />
   </LinearLayout>
     <LinearLayout
         android:id="@+id/topright"
-		android:layout_width="90dp"
-        android:layout_height="150dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
+        android:layout_height="fill_parent"
         android:background="@drawable/shape" >
 
         <TextView
             android:id="@+id/txtviews2"
             android:layout_width="fill_parent"
-			android:layout_gravity="center"
+			android:gravity="center"
 			android:textSize="20sp"
 			android:layout_height="fill_parent"
             android:text="242" />
@@ -164,14 +178,15 @@
 
     <LinearLayout
         android:id="@+id/bottomleft"
-        android:layout_width="90dp"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+		android:layout_weight="1"
+        android:layout_height="fill_parent"
         android:background="@drawable/shape" >
 
         <TextView
             android:id="@+id/txtviews3"
             android:layout_width="fill_parent"
-			android:layout_gravity="center"
+			android:gravity="center"
 			android:layout_height="fill_parent"
 			android:textSize="20sp"
 			android:text="244" />
@@ -179,18 +194,36 @@
 
     <LinearLayout
         android:id="@+id/bottomright"
-        android:layout_width="90dp"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+		android:layout_weight="1"
+        android:layout_height="fill_parent"
         android:background="@drawable/shape" >
 
 
         <TextView
             android:id="@+id/txtviews4"
             android:layout_width="fill_parent"
-			android:layout_gravity="center"
+			android:gravity="center"
 			android:layout_height="fill_parent"
 			android:textSize="20sp"
 			android:text="245" />
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomright2"
+        android:layout_width="0dp"
+		android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:background="@drawable/shape" >
+
+
+        <TextView
+            android:id="@+id/txtviews5"
+            android:layout_width="fill_parent"
+			android:gravity="center"
+			android:layout_height="fill_parent"
+			android:textSize="20sp"
+			android:text="260" />
 	</LinearLayout>
 </LinearLayout>
 </LinearLayout>
