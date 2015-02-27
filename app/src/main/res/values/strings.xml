@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">ObservationLogger</string>
-    <string name="hello_world">Hello world!</string>
-
-</resources>
+	<string name="current_time">Current time</string>
+	<string name="last_obs">Last observation</string>
+	<string name="waittime">Time since last observation : </string>
+    <string name="app_name">Observations</string>
+	<string name="cowid">Cow id :</string>
+    <string name="current_obs">Current observation</string>
+    <string name="graze">Grazing</string>
+	<string name="rest">Resting</string>
+	<string name="walk">Walking</string>
+	<string name="other">Other</string>
+	<string name="confirm">Confirm</string>
+	<string name="undo">Undo</string>
+		
+	</resources>
