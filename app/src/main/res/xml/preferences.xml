@@ -10,11 +10,11 @@
             android:title="@string/upload"
             />
         <EditTextPreference android:title="@string/uploadurl"
-            android:key="Name"
+            android:key="uploadURL"
             android:dependency="doUpload"
             android:summary="@string/uploadurl"
             android:dialogTitle="@string/uploadurl"
-            android:defaultValue="http://aws.sickel.net"/>
+            android:defaultValue="http://hhv3.sickel.net/obstest/"/>
    </PreferenceCategory>
     <PreferenceCategory
         android:summary="@string/miscSettings"

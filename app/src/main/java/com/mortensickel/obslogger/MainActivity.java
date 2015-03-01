@@ -21,22 +21,29 @@ import android.widget.LinearLayout;
 import java.io.*;
 import java.net.*;
 import android.widget.LinearLayout.LayoutParams;
-
-
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 public class MainActivity extends Activity {
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
+    private boolean doUpload=true;
     private String savefile="observations.dat";
 	private ShowTimeRunner myTimerThread = new ShowTimeRunner();
 	/** Called when the activity is first created. */
     private static final int RESULT_SETTINGS = 1;
-
+    private String uuid;
+    //private final String uuid="txt";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        uuid=Installation.id(getApplicationContext());
+        urlString=  sharedPrefs.getString("uploadURL", "NULL");
+        Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.main);
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
@@ -148,7 +155,7 @@ public class MainActivity extends Activity {
 		 String status="+";
 		 String params="";
 		 try{
-		 params="activity="+bt+"&ts="+ts+"&cowid="+cowid;
+		 params="activity="+bt+"&ts="+ts+"&cowid="+cowid+"&uuid="+uuid;
 		 URL url = new URL(urlString+"?"+params);
 		 new PostObservation().execute(url);
 		 } catch (Exception e) {
@@ -370,6 +377,9 @@ public class MainActivity extends Activity {
 		}
 
 
-		
+
+
 			
 }
+
+
