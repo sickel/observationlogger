@@ -10,21 +10,29 @@ and then press confirm to have the registration uploaded. The confirm button sho
 the classification is done. Up to 20 seconds after "Confirm" is pressed, the registration may be undone - that is an undo
 message is sent to the server. 
 
-V 1.0 27. February 2015
+V 1.0 February 27 2015
 
 Can register behaviour for animals
 User Interface made to minimise the risk of unintended registrations
 Possible to undo a registration
 
+V 1.1 March 1 2015
+User settable upload url
+User settable drag and drop names
+Uuid for installation
+User settable user name (used in the uploads)
+User settable timeout for Confirm or Undo
+
 Planned:
 
-Make system for settings:
-- url to upload data to
-- Names of classes and groups
+User settable data
 - Turn of uploading, only store data locally
+
 
 GPS
 Make it possible to log the position where an observation is done. (this should be user-selectable)
 
-
+- Upload settings data from server
+  Values for the drag and drop fields could be stored on server and fetched. Use the project name
+  to select if there are several possible sets.
 

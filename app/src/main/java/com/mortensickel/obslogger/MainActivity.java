@@ -18,7 +18,7 @@ import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+// import android.widget.LinearLayout;
 import java.io.*;
 import java.net.*;
 import java.util.List;
@@ -35,11 +35,13 @@ public class MainActivity extends Activity {
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private boolean doUpload=true;
     private String savefile="observations.dat";
-	private ShowTimeRunner myTimerThread = new ShowTimeRunner();
+	private String project;
+    private final ShowTimeRunner myTimerThread = new ShowTimeRunner();
 	/** Called when the activity is first created. */
     private static final int RESULT_SETTINGS = 1;
     private String uuid;
     private String username;
+    private int timeout=10;
     //private final String uuid="txt";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class MainActivity extends Activity {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
+        project=sharedPrefs.getString("projectName","");
+        timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
         String dragnames=sharedPrefs.getString("dragNames", String.valueOf(R.string.dragnames));
         List<String> drags= Arrays.asList(dragnames.split("\\s*,\\s*"));
         // String[] drags={"240","242","244","245","260"};
@@ -143,7 +147,7 @@ public class MainActivity extends Activity {
 
 			try {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-				outputStream.write((params+"\n").getBytes());
+				outputStream.write((status+params+"\n").getBytes());
 				outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -163,40 +167,36 @@ public class MainActivity extends Activity {
 		myTimerThread.resetTime();
 		Date moment = new Date();
 		String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
-		 String bt=tv.substring(tv.lastIndexOf(" ")+1);
-		 //	Spinner cowidspinner=(Spinner)findViewById(R.id.cowidSpinner);
-		 String cowid=tv.substring(tv.indexOf(":")+1,tv.lastIndexOf(" "));
-		 //String.valueOf(cowidspinner.getSelectedItem());
-		 //
+		 String drop=tv.substring(tv.lastIndexOf(" ")+1);
+		 String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
 		 String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
 		 String status="+";
 		 String params="";
 		 try{
-		 params="activity="+bt+"&ts="+ts+"&cowid="+cowid+"&uuid="+uuid+"&username="+username;
-		 URL url = new URL(urlString+"?"+params);
-		 new PostObservation().execute(url);
+		    params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project;
+		    URL url = new URL(urlString+"?"+params);
+		    new PostObservation().execute(url);
 		 } catch (Exception e) {
-		 status="-";
-		 Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
+		    status="-";
+		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		 }
 		 try{
-		 String sep =";";
-		 FileOutputStream outputStream;
+		    String sep =";";
+		    FileOutputStream outputStream;
 
-		 try {
-		 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-		 outputStream.write((params+"\n").getBytes());
-		 outputStream.close();
-		 } catch (Exception e) {
-		 e.printStackTrace();
-		 }
+             try {
+                outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
+                outputStream.write((status+params+"\n").getBytes());
+                outputStream.close();
+             } catch (Exception e) {
+                e.printStackTrace();
+             }
 		 }catch (Exception e) {
-		 Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
+		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		 }
 		 TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
 		 String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-
-		 txtLast.setText(otime+": "+cowid+" "+bt);
+		 txtLast.setText(otime+": "+drag+" "+drop);
 		 
 	} 
 	
@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
 	}
 
 	class MyDragListener implements OnDragListener {
-		Drawable normalShape = getResources().getDrawable(R.drawable.shape);
+		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
@@ -240,7 +240,7 @@ public class MainActivity extends Activity {
 					view.setVisibility(View.VISIBLE);*/
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
-					v.setBackgroundDrawable(normalShape);
+					v.setBackground(normalShape);
 				default:
 					break;
 			}
@@ -256,8 +256,8 @@ public class MainActivity extends Activity {
 		
 		
 		class MyDropListener implements OnDragListener {
-		Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
-		Drawable normalShape = getResources().getDrawable(R.drawable.shape);
+		final Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
+		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
@@ -267,10 +267,10 @@ public class MainActivity extends Activity {
 					// do nothing
 					break;
 				case DragEvent.ACTION_DRAG_ENTERED:
-					v.setBackgroundDrawable(enterShape);
+					v.setBackground(enterShape);
 					break;
 				case DragEvent.ACTION_DRAG_EXITED:
-					v.setBackgroundDrawable(normalShape);
+					v.setBackground(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
 					// Dropped, reassign View to ViewGroup
@@ -298,7 +298,7 @@ public class MainActivity extends Activity {
 					view.setVisibility(View.VISIBLE);*/
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
-					v.setBackgroundDrawable(normalShape);
+					v.setBackground(normalShape);
 				default:
 					break;
 			}
@@ -319,7 +319,8 @@ public class MainActivity extends Activity {
 							Date dt= new Date();
 							long sec=dt.getTime();
 							sec=(sec-startTime)/1000;
-							if(sec>20){
+
+							if(sec>timeout && timeout > 0){
 								// undo timeout. to be set in settings
 								Button bt=(Button)findViewById(R.id.btnUndo);
 								bt.setEnabled(false);
@@ -352,7 +353,8 @@ public class MainActivity extends Activity {
 			public void resetTime(){
 				this.startTime=new Date().getTime();
 			}
-			@Override
+
+            @Override
 			public void run()
 			{
 				while(!Thread.currentThread().isInterrupted()){

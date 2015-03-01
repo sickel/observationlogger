@@ -45,6 +45,13 @@
         android:summary="@string/pref_drag_names_summary"
         android:dialogTitle="@string/pref_drag_names"
         android:defaultValue=""/>
+        <EditTextPreference
+            android:defaultValue="20"
+            android:dialogTitle="@string/pref_timeout"
+            android:inputType="number"
+            android:key="pref_timeout"
+            android:summary="@string/pref_timeout_summary"
+            android:title="@string/pref_timeout" />
 </PreferenceCategory>
     <!--Any other categories include here
     -->

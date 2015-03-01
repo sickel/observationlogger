@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 
 
-public class Installation {
+class Installation {
     private static String sID = null;
     private final static String INSTALLATION = "INSTALLATION";
 

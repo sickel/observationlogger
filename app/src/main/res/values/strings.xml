@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="current_time">Current time</string>
 	<string name="last_obs">Last observation</string>
 	<string name="waittime">Time since last observation : </string>
     <string name="app_name">Observations</string>
-	<string name="cowid">Cow id :</string>
-    <string name="current_obs">Current observation</string>
-    <string name="graze">Grazing</string>
-	<string name="rest">Resting</string>
-	<string name="walk">Walking</string>
-	<string name="other">Other</string>
 	<string name="confirm">Confirm</string>
 	<string name="undo">Undo</string>
     <string name="uploaddata">Data uploading</string>
@@ -20,7 +13,6 @@
     <string name="useGPS">Use GPS</string>
     <string name="miscSettings">Misc. settings</string>
 
-    <string name="title_activity_main">MainActivity</string>
 
 
     <string name="pref_user_name">Set user name</string>
@@ -32,9 +24,8 @@
     <string name="pref_drop_names_summary">Comma separated list</string>
     <string name="pref_drag_names">Set names of the drag fields</string>
     <string name="pref_drag_names_summary">Comma separated list</string>
-
-    <string name="pref_user_profile">User Profile</string>
-    <string name="pref_update_setting">Update Settings</string>
+    <string name="pref_timeout">Timeout</string>
+    <string name="pref_timeout_summary">Settings to confirm or undo</string>
     <string name="dropnames">Grazing,Resting,Walking,Other</string>
     <string name="dragnames">240,242,244,245,260</string>
 </resources>
