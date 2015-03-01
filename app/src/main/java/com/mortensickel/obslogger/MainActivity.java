@@ -1,6 +1,7 @@
 package com.mortensickel.obslogger;
 
 import java.text.*;
+import java.util.Arrays;
 import java.util.Date;
 import android.util.TypedValue;
 import android.os.*;
@@ -20,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import java.io.*;
 import java.net.*;
+import java.util.List;
+
 import android.widget.LinearLayout.LayoutParams;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -36,20 +39,35 @@ public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
     private static final int RESULT_SETTINGS = 1;
     private String uuid;
+    private String username;
     //private final String uuid="txt";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         uuid=Installation.id(getApplicationContext());
-        urlString=  sharedPrefs.getString("uploadURL", "NULL");
-        Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.main);
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
-	    String[] drags={"240","242","244","245","260"};
-	    ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
+	 	Button bt=(Button)findViewById(R.id.btnConfirm);
+		bt.setEnabled(false);
+		bt=(Button)findViewById(R.id.btnUndo);
+		bt.setEnabled(false);
+	}
+
+    @Override
+    public void onResume() {
+        // Rewrite the parts on drag and drop names to avoid code redundancy
+        super.onResume();  // Always call the superclass method first
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        urlString=sharedPrefs.getString("uploadURL", "");
+        username=sharedPrefs.getString("userName","");
+        String dragnames=sharedPrefs.getString("dragNames", String.valueOf(R.string.dragnames));
+        List<String> drags= Arrays.asList(dragnames.split("\\s*,\\s*"));
+        // String[] drags={"240","242","244","245","260"};
+        ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
+        ll.removeAllViews();
         for (String drag : drags) {
             LinearLayout b = new LinearLayout(this);
             b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
@@ -64,8 +82,11 @@ public class MainActivity extends Activity {
             tv.setOnTouchListener(new MyTouchListener());
             ll.addView(b);
         }
-		String[] drops={"Grazing","Resting","Walking","Other"};
+        String dropnames=sharedPrefs.getString("dropNames", String.valueOf(R.string.dropnames));
+        List<String> drops= Arrays.asList(dropnames.split("\\s*,\\s*"));
+        //String[] drops={"Grazing","Resting","Walking","Other"};
         ll =(ViewGroup)findViewById(R.id.dropzones);
+        ll.removeAllViews();
         for (String drop : drops) {
             LinearLayout b = new LinearLayout(this);
             b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
@@ -79,11 +100,7 @@ public class MainActivity extends Activity {
             b.setOnDragListener(new MyDropListener());
             ll.addView(b);
         }
-    	Button bt=(Button)findViewById(R.id.btnConfirm);
-		bt.setEnabled(false);
-		bt=(Button)findViewById(R.id.btnUndo);
-		bt.setEnabled(false);
-	}
+    }
 
 
     @Override
@@ -155,7 +172,7 @@ public class MainActivity extends Activity {
 		 String status="+";
 		 String params="";
 		 try{
-		 params="activity="+bt+"&ts="+ts+"&cowid="+cowid+"&uuid="+uuid;
+		 params="activity="+bt+"&ts="+ts+"&cowid="+cowid+"&uuid="+uuid+"&username="+username;
 		 URL url = new URL(urlString+"?"+params);
 		 new PostObservation().execute(url);
 		 } catch (Exception e) {

@@ -23,14 +23,18 @@
     <string name="title_activity_main">MainActivity</string>
 
 
-    <string name="pref_send_report">Send crash reports</string>
-    <string name="pref_send_report_summary">Helps to fix bugs</string>
-    <string name="pref_sync_frequency">Sync frequency</string>
-    <string name="pref_sync_frequency_summary">Set the sync frequency</string>
-    <string name="pref_user_name">Set username</string>
-    <string name="pref_user_name_summary">Set your username</string>
+    <string name="pref_user_name">Set user name</string>
+    <string name="pref_user_name_summary">User name - used in uploads</string>
+    <string name="pref_project_name">Set project name</string>
+    <string name="pref_project_name_summary">Project name - used in uploads</string>
+
+    <string name="pref_drop_names">Set names of the drop fields</string>
+    <string name="pref_drop_names_summary">Comma separated list</string>
+    <string name="pref_drag_names">Set names of the drag fields</string>
+    <string name="pref_drag_names_summary">Comma separated list</string>
 
     <string name="pref_user_profile">User Profile</string>
     <string name="pref_update_setting">Update Settings</string>
-
+    <string name="dropnames">Grazing,Resting,Walking,Other</string>
+    <string name="dragnames">240,242,244,245,260</string>
 </resources>
