@@ -3,7 +3,6 @@ package com.mortensickel.obslogger;
 import java.text.*;
 import java.util.Date;
 import android.util.TypedValue;
-import android.app.*;
 import android.os.*;
 import android.view.Gravity;
 import android.widget.*;
@@ -24,9 +23,9 @@ import java.net.*;
 import android.widget.LinearLayout.LayoutParams;
 
 public class MainActivity extends Activity {
-	public String urlString="http://hhv3.sickel.net/beite/storeobs.php";
-    public String savefile="observations.dat";
-	ShowTimeRunner myTimerThread = new ShowTimeRunner();
+	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
+    private String savefile="observations.dat";
+	private ShowTimeRunner myTimerThread = new ShowTimeRunner();
 	/** Called when the activity is first created. */
 
 	@Override
@@ -36,25 +35,40 @@ public class MainActivity extends Activity {
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
+	    String[] drags={"240","242","244","245","260"};
 	    ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
-
-		//int i;
-		for(int i=0;i<ll.getChildCount();i++){
-			ll.getChildAt(i).setOnDragListener(new MyDragListener());
-			((LinearLayout)ll.getChildAt(i)).getChildAt(0).setOnTouchListener(new MyTouchListener());
-		}
-		String[] drops={"Grazing","Resting","Walking","Other"};
-        ll =(ViewGroup)findViewById(R.id.dropzones);
-        for(int i=0;i<drops.length;i++) {
+        for (String drag : drags) {
             LinearLayout b = new LinearLayout(this);
             b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
             TextView tv = new TextView(this);
-            tv.setText(drops[i]);
+            tv.setText(drag);
             tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             tv.setGravity(Gravity.CENTER);
             b.addView(tv);
             b.setBackgroundResource(R.drawable.shape);
+            b.setOnDragListener(new MyDragListener());
+            tv.setOnTouchListener(new MyTouchListener());
+            ll.addView(b);
+        }
+		//int i;
+		/*for(int i=0;i<ll.getChildCount();i++){
+			ll.getChildAt(i).setOnDragListener(new MyDragListener());
+			((LinearLayout)ll.getChildAt(i)).getChildAt(0).setOnTouchListener(new MyTouchListener());
+		} */
+		String[] drops={"Grazing","Resting","Walking","Other"};
+        ll =(ViewGroup)findViewById(R.id.dropzones);
+        for (String drop : drops) {
+            LinearLayout b = new LinearLayout(this);
+            b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
+            TextView tv = new TextView(this);
+            tv.setText(drop);
+            tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            tv.setGravity(Gravity.CENTER);
+            b.addView(tv);
+            b.setBackgroundResource(R.drawable.shape);
+            b.setOnDragListener(new MyDropListener());
             ll.addView(b);
         }
         for(int i=0;i<ll.getChildCount();i++){
@@ -81,9 +95,7 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
 		}
 		try{
-			//	String path = Context.   .getFilesææææ.getAbsolutePath();
 			String sep =";";
-			///	String string = status+ts+sep+cowid+sep+bt+"\n";
 			FileOutputStream outputStream;
 
 			try {
@@ -125,9 +137,7 @@ public class MainActivity extends Activity {
 		 Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
 		 }
 		 try{
-		 //	String path = Context.   .getFilesææææ.getAbsolutePath();
 		 String sep =";";
-		 ///	String string = status+ts+sep+cowid+sep+bt+"\n";
 		 FileOutputStream outputStream;
 
 		 try {
@@ -163,7 +173,6 @@ public class MainActivity extends Activity {
 	}
 
 	class MyDragListener implements OnDragListener {
-		Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
 		@Override
@@ -174,7 +183,6 @@ public class MainActivity extends Activity {
 					// do nothing
 					break;
 				case DragEvent.ACTION_DRAG_ENTERED:
-					//v.setBackgroundDrawable(enterShape);
 					break;
 				case DragEvent.ACTION_DRAG_EXITED:
 				//	v.setBackgroundDrawable(normalShape);
@@ -260,7 +268,7 @@ public class MainActivity extends Activity {
 		
 		}
 
-		public void doWork(final long startTime){
+		void doWork(final long startTime){
 			runOnUiThread(new Runnable(){
 					public void run(){
 						try{
@@ -332,9 +340,8 @@ public class MainActivity extends Activity {
 					this.exception=e;
 					return null;
 				}
-
-				long retval=10;
-				return retval;
+                long status=10;
+				return status;
 			}
 
 			protected void onPostExecute(Long res){
