@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+        android:summary="@string/uploaddata"
+        android:title="@string/uploaddata">
+        <CheckBoxPreference
+            android:key="doUpload"
+            android:defaultValue="true"
+            android:summary="@string/upload"
+            android:title="@string/upload"
+            />
+        <EditTextPreference android:title="@string/uploadurl"
+            android:key="Name"
+            android:dependency="doUpload"
+            android:summary="@string/uploadurl"
+            android:dialogTitle="@string/uploadurl"
+            android:defaultValue="http://aws.sickel.net"/>
+   </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="@string/miscSettings"
+        android:title="@string/miscSettings">
+        <CheckBoxPreference
+            android:key="useGPS"
+            android:defaultValue="true"
+            android:summary="@string/useGPS"
+            android:title="@string/useGPS"
+            />
+
+    </PreferenceCategory>
+    <!--Any other categories include here-->
+</PreferenceScreen>

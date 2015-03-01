@@ -12,5 +12,25 @@
 	<string name="other">Other</string>
 	<string name="confirm">Confirm</string>
 	<string name="undo">Undo</string>
-		
-	</resources>
+    <string name="uploaddata">Data uploading</string>
+
+    <string name="upload">Upload data to server</string>
+    <string name="uploadurl">Url to upload to</string>
+    <string name="menu_settings">Settings</string>
+    <string name="useGPS">Use GPS</string>
+    <string name="miscSettings">Misc. settings</string>
+
+    <string name="title_activity_main">MainActivity</string>
+
+
+    <string name="pref_send_report">Send crash reports</string>
+    <string name="pref_send_report_summary">Helps to fix bugs</string>
+    <string name="pref_sync_frequency">Sync frequency</string>
+    <string name="pref_sync_frequency_summary">Set the sync frequency</string>
+    <string name="pref_user_name">Set username</string>
+    <string name="pref_user_name_summary">Set your username</string>
+
+    <string name="pref_user_profile">User Profile</string>
+    <string name="pref_update_setting">Update Settings</string>
+
+</resources>

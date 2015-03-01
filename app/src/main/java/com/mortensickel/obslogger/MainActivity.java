@@ -22,16 +22,22 @@ import java.io.*;
 import java.net.*;
 import android.widget.LinearLayout.LayoutParams;
 
+
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
+
 public class MainActivity extends Activity {
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private String savefile="observations.dat";
 	private ShowTimeRunner myTimerThread = new ShowTimeRunner();
 	/** Called when the activity is first created. */
+    private static final int RESULT_SETTINGS = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+        setContentView(R.layout.main);
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
@@ -51,11 +57,6 @@ public class MainActivity extends Activity {
             tv.setOnTouchListener(new MyTouchListener());
             ll.addView(b);
         }
-		//int i;
-		/*for(int i=0;i<ll.getChildCount();i++){
-			ll.getChildAt(i).setOnDragListener(new MyDragListener());
-			((LinearLayout)ll.getChildAt(i)).getChildAt(0).setOnTouchListener(new MyTouchListener());
-		} */
 		String[] drops={"Grazing","Resting","Walking","Other"};
         ll =(ViewGroup)findViewById(R.id.dropzones);
         for (String drop : drops) {
@@ -71,17 +72,35 @@ public class MainActivity extends Activity {
             b.setOnDragListener(new MyDropListener());
             ll.addView(b);
         }
-        for(int i=0;i<ll.getChildCount();i++){
-			ll.getChildAt(i).setOnDragListener(new MyDropListener());
-		}
-		Button bt=(Button)findViewById(R.id.btnConfirm);
+    	Button bt=(Button)findViewById(R.id.btnConfirm);
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
 	}
-	
-	
-	public void undoAct(View v){
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_settings:
+                Intent i = new Intent(this, UserSettingsActivity.class);
+                startActivityForResult(i, RESULT_SETTINGS);
+                break;
+
+        }
+
+        return true;
+    }
+
+
+    public void undoAct(View v){
 	
 		Button btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(false);
