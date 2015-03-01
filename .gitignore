@@ -1,5 +1,7 @@
-bin/
-gen/
-obj/
-libs/*/*.so
-
+build
+.gradle
+.idea
+local.properties
+*.apk
+*.ap_
+*.iml

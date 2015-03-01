@@ -2,8 +2,10 @@ package com.mortensickel.obslogger;
 
 import java.text.*;
 import java.util.Date;
+import android.util.TypedValue;
 import android.app.*;
 import android.os.*;
+import android.view.Gravity;
 import android.widget.*;
 import android.app.Activity;
 import android.content.ClipData;
@@ -19,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import java.io.*;
 import java.net.*;
+import android.widget.LinearLayout.LayoutParams;
+
 public class MainActivity extends Activity {
 	public String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     public String savefile="observations.dat";
@@ -27,29 +31,39 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
-		
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		Thread showtimeThread = null;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
 	    ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
-		int i;
-		for(i=0;i<ll.getChildCount();i++){
+
+		//int i;
+		for(int i=0;i<ll.getChildCount();i++){
 			ll.getChildAt(i).setOnDragListener(new MyDragListener());
 			((LinearLayout)ll.getChildAt(i)).getChildAt(0).setOnTouchListener(new MyTouchListener());
 		}
-		ll =(ViewGroup)findViewById(R.id.dropzones);
-		for(i=0;i<ll.getChildCount();i++){
+		String[] drops={"Grazing","Resting","Walking","Other"};
+        ll =(ViewGroup)findViewById(R.id.dropzones);
+        for(int i=0;i<drops.length;i++) {
+            LinearLayout b = new LinearLayout(this);
+            b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
+            TextView tv = new TextView(this);
+            tv.setText(drops[i]);
+            tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            tv.setGravity(Gravity.CENTER);
+            b.addView(tv);
+            b.setBackgroundResource(R.drawable.shape);
+            ll.addView(b);
+        }
+        for(int i=0;i<ll.getChildCount();i++){
 			ll.getChildAt(i).setOnDragListener(new MyDropListener());
 		}
 		Button bt=(Button)findViewById(R.id.btnConfirm);
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
-		
 	}
 	
 	
