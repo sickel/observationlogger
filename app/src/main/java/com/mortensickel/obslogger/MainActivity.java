@@ -397,7 +397,7 @@ public class MainActivity extends Activity {
 					URLConnection conn = urls[0].openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
-					while((inputLine = in.readLine())!=null)
+					while((inputLine = in.readLine())!=null){}
 					//	showDialog(inputLine);
 					//	Toast.makeText(this, "result "+inputLine, Toast.LENGTH_LONG).show();
 					in.close();
