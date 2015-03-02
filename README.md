@@ -1,3 +1,5 @@
+See also http://sickel.net/blogg/?p=1841
+
 App for logging field observation
 
 The initial intended use of this app is to log animals behaviour in field. A number of animals can be associated to 
