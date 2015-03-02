@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import java.io.*;
 import java.net.*;
 import java.util.List;
+import java.util.Scanner;
+import java.util.ArrayList;
 
 import android.widget.LinearLayout.LayoutParams;
 import android.content.SharedPreferences;
@@ -29,12 +31,14 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.service.notification.*;
 
 
 public class MainActivity extends Activity {
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private boolean doUpload=true;
     private String savefile="observations.dat";
+	private String errorfile="errors.dat";
 	private String project;
     private final ShowTimeRunner myTimerThread = new ShowTimeRunner();
 	/** Called when the activity is first created. */
@@ -121,12 +125,34 @@ public class MainActivity extends Activity {
                 Intent i = new Intent(this, UserSettingsActivity.class);
                 startActivityForResult(i, RESULT_SETTINGS);
                 break;
+			case R.id.menu_upload:
+				saveObs();	
+				break;
 
         }
 
         return true;
     }
 
+	
+	public void saveObs(){
+		/* Reading saved observations and reupload those that are not uploaded 
+		   Rewrite file if changesaaaaaä*/
+	//	Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
+		ArrayList<String> linelist = new ArrayList<String>();
+		try{
+			InputStream is=openFileInput(errorfile);
+			BufferedReader rdr =new BufferedReader(new InputStreamReader(is));
+			String myLine; 
+			while((myLine=rdr.readLine())!=null) linelist.add(myLine);	
+		}catch(Exception e){
+			Toast.makeText(getApplicationContext(),"File read error",Toast.LENGTH_SHORT).show();
+		}
+		Toast.makeText(getApplicationContext(),"So far so good "+linelist.size(),Toast.LENGTH_SHORT).show();
+		for(String line :linelist){
+		//	if(line.charAt(0)=="-")
+		}
+	}
 
     public void undoAct(View v){
 	
@@ -170,12 +196,13 @@ public class MainActivity extends Activity {
 		 String drop=tv.substring(tv.lastIndexOf(" ")+1);
 		 String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
 		 String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
-		 String status="+";
+		 String status="";
 		 String params="";
 		 try{
 		    params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project;
 		    URL url = new URL(urlString+"?"+params);
 		    new PostObservation().execute(url);
+			status="+";
 		 } catch (Exception e) {
 		    status="-";
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
@@ -287,15 +314,7 @@ public class MainActivity extends Activity {
 					bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
 					bt.setEnabled(false);
-					
 					txtLast.setText(otime+": "+t+" "+st);
-					//
-					/*	View view = (View) 
-					ViewGroup owner = (ViewGroup) view.getParent();
-					owner.removeView(view);
-					LinearLayout container = (LinearLayout) v;
-					container.addView(view);
-					view.setVisibility(View.VISIBLE);*/
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
 					v.setBackground(normalShape);
@@ -369,10 +388,11 @@ public class MainActivity extends Activity {
 			}
 		}
 		
-		private class PostObservation extends AsyncTask<URL, Void,Long>{
+		private class PostObservation extends AsyncTask<URL, Void,Integer>{
 
 			private Exception exception;
-			protected Long doInBackground(URL... urls){	
+			private Integer status;
+			protected Integer doInBackground(URL... urls){	
 				try{
 					URLConnection conn = urls[0].openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -383,14 +403,31 @@ public class MainActivity extends Activity {
 					in.close();
 				}catch(Exception e){
 					this.exception=e;
+					status=0;
+					
+					FileOutputStream outputStream;
+
+					try {
+						outputStream = openFileOutput(errorfile, getApplicationContext().MODE_APPEND);
+						outputStream.write(("Error "+e.getMessage()+"\n").getBytes());
+						outputStream.write((urls[0]+"\n").getBytes());
+						outputStream.close();
+					} catch (Exception fe) {
+						fe.printStackTrace();
+					}
+				//	Toast.makeText(getApplicationContext()," upload error caught", Toast.LENGTH_SHORT).show();
+					
 					return null;
 				}
-                long status=10;
+                status=10;
 				return status;
 			}
 
 			protected void onPostExecute(Long res){
-				//showDialog("Ok");
+				if(status==0){
+					Toast.makeText(getApplicationContext()," upload error", Toast.LENGTH_SHORT).show();
+					
+				}
 			}
 
 		}
