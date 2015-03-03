@@ -32,8 +32,7 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
-		    //  Logging.i("CLAZZ", "onHandleIntent", "invoked");
-        if(intent!=null){
+		if(intent!=null){
             if (intent.getAction().equals("startListening")) {
                 locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);

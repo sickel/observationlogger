@@ -37,7 +37,7 @@ import android.util.Log;
 import android.os.IBinder;
 import android.content.ServiceConnection;
 import android.content.*;
-import com.mortensickel.obslogger.LocationService;
+import com.mortensickel.obslogger.LocationService.*;
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 	   	lServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+                LocalBinder binder = (LocalBinder) service;
                 lService = binder.getService();
                 lServiceBound=true;
             }
