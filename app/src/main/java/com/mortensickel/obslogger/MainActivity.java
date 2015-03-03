@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
     private String uuid;
     private String username;
     private int timeout=10;
+    // Messenger lService = null;
     //private final String uuid="txt";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,18 @@ public class MainActivity extends Activity {
 		Intent intent=new Intent(this, LocationService.class);
 		intent.setAction("startListening");
 		startService(intent);
-	//	bindService(intent,lServiceConnection,Context.BIND_AUTO_CREATE);
+	   	lServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                lServiceBound=true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                lServiceBound = false;
+            }
+        };
+        bindService(intent,lServiceConnection,Context.BIND_AUTO_CREATE);
 	}
 	
 	@Override

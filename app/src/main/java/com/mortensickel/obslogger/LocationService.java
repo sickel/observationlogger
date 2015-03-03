@@ -21,23 +21,22 @@ public class LocationService extends Service implements LocationListener {
 	private static String LOGTAG="Locservice";
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
-		Log.v(LOGTAG,"in onstart");
-      //  Logging.i("CLAZZ", "onHandleIntent", "invoked");
-if(intent!=null){
-	Log.v(LOGTAG,"in onstart ... intent not null");
-	Log.v(LOGTAG,intent.getAction());
-	Log.v(LOGTAG,"in onstart ... intent not null - after");
-	 if (intent.getAction().equals("startListening")) {
-            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-        else {
-            if (intent.getAction().equals("stopListening")) {
-                locationManager.removeUpdates(this);
-                locationManager = null;
+		    //  Logging.i("CLAZZ", "onHandleIntent", "invoked");
+        if(intent!=null){
+            if (intent.getAction().equals("startListening")) {
+                locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                Log.i(LOGTAG,"Locationservice started");
+            }
+            else {
+                if (intent.getAction().equals("stopListening")) {
+                    locationManager.removeUpdates(this);
+                    locationManager = null;
+                    Log.i(LOGTAG,"Locationservice stopped");
+                }
             }
         }
-}
+
         return START_STICKY;
 
     }
@@ -50,6 +49,7 @@ if(intent!=null){
     public void onLocationChanged(final Location location) {
         this.location = location;   
         // TODO this is where you'd do something like context.sendBroadcast()
+        Log.i(LOGTAG,location.toString());
     }
 
     public void onProviderDisabled(final String provider) {
@@ -59,6 +59,7 @@ if(intent!=null){
     }
 
     public void onStatusChanged(final String arg0, final int arg1, final Bundle arg2) {
+
     }
 
 	}
