@@ -235,26 +235,32 @@ public class MainActivity extends Activity {
 		btn.setEnabled(true);
 		myTimerThread.resetTime();
 		Date moment = new Date();
-		if(lServiceBound){
-            Location loc=lService.getLocation();
-            Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+        String params="";
+        try{
+            if(lServiceBound){
+                Location loc=lService.getLocation();
+                //Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+                params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
+            }
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(),"GPS location still not available",Toast.LENGTH_LONG);
         }
         String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
-		 String drop=tv.substring(tv.lastIndexOf(" ")+1);
-		 String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
-		 String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
-		 String status="";
-		 String params="";
-		 try{
-		    params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project;
+		String drop=tv.substring(tv.lastIndexOf(" ")+1);
+		String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
+		String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
+		String status="";
+
+		try{
+		    params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
 		    URL url = new URL(urlString+"?"+params);
 		    new PostObservation().execute(url);
 			status="+";
-		 } catch (Exception e) {
+		} catch (Exception e) {
 		    status="-";
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
-		 }
-		 try{
+		}
+		try{
 		    String sep =";";
 		    FileOutputStream outputStream;
 
@@ -265,13 +271,12 @@ public class MainActivity extends Activity {
              } catch (Exception e) {
                 e.printStackTrace();
              }
-		 }catch (Exception e) {
+		}catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
-		 }
-		 TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
-		 String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-		 txtLast.setText(otime+": "+drag+" "+drop);
-		 
+		}
+		TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
+		String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
+		txtLast.setText(otime+": "+drag+" "+drop);
 	} 
 	
 	
