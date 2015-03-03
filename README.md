@@ -23,15 +23,16 @@ User settable user name (used in upload)
 User settable timeout for Confirm or Undo
 User settable project name (used in upload)
 
+V 1.2 March 3 2015
+
+Using gps to log the position where an observation is done.
 
 
 Planned:
 
 User settable data
   Turn of uploading, only store data locally
-
-GPS
-  Make it possible to log the position where an observation is done. (this should be user-selectable)
+  Select to use GPS
 
 Upload settings data from server
   Values for the drag and drop fields could be stored on server and fetched. Use the project name

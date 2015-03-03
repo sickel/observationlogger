@@ -239,8 +239,10 @@ public class MainActivity extends Activity {
         try{
             if(lServiceBound){
                 Location loc=lService.getLocation();
-                //Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
                 params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
+            }else{
+                Toast.makeText(getApplicationContext(),"GPS still not available",Toast.LENGTH_SHORT).show();
             }
         }catch(Exception e){
             Toast.makeText(getApplicationContext(),"GPS location still not available",Toast.LENGTH_LONG);
