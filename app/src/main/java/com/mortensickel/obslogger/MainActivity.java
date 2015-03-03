@@ -32,9 +32,15 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.service.notification.*;
-
+import android.util.Log;
+import android.os.IBinder;
+import android.content.ServiceConnection;
+import com.mortensickel.obslogger.LocationService.*;
+import android.content.*;
 
 public class MainActivity extends Activity {
+	LocationService lService;
+	boolean lServiceBound=false;
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private boolean doUpload=true;
     private String savefile="observations.dat";
@@ -61,7 +67,28 @@ public class MainActivity extends Activity {
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
 	}
-
+	
+	private ServiceConnection lServiceConnection;
+	
+// www.trution.com/2014/11/bound-service-example-android/
+	@Override
+	protected void onStart(){
+		super.onStart();
+		Intent intent=new Intent(this, LocationService.class);
+		intent.setAction("startListening");
+		startService(intent);
+	//	bindService(intent,lServiceConnection,Context.BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
+		if(lServiceBound){
+			unbindService(lServiceConnection);
+			lServiceBound=false;
+		}
+	}
+	
     @Override
     public void onResume() {
         // Rewrite the parts on drag and drop names to avoid code redundancy
@@ -72,7 +99,8 @@ public class MainActivity extends Activity {
         project=sharedPrefs.getString("projectName","");
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
         String dragnames=sharedPrefs.getString("dragNames", String.valueOf(R.string.dragnames));
-        List<String> drags= Arrays.asList(dragnames.split("\\s*,\\s*"));
+        Log.w("obslog","test");
+		List<String> drags= Arrays.asList(dragnames.split("\\s*,\\s*"));
         // String[] drags={"240","242","244","245","260"};
         ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
         ll.removeAllViews();

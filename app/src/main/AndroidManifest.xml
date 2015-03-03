@@ -4,6 +4,7 @@
     android:versionCode="1"
     android:versionName="1.1">
     <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -19,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+		<service android:name= "com.mortensickel.obslogger.LocationService" ></service>
     </application>
 
 </manifest>
