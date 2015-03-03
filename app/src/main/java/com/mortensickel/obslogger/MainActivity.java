@@ -3,6 +3,8 @@ package com.mortensickel.obslogger;
 import java.text.*;
 import java.util.Arrays;
 import java.util.Date;
+
+import android.location.Location;
 import android.util.TypedValue;
 import android.os.*;
 import android.view.Gravity;
@@ -31,12 +33,11 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.service.notification.*;
 import android.util.Log;
 import android.os.IBinder;
 import android.content.ServiceConnection;
-import com.mortensickel.obslogger.LocationService.*;
 import android.content.*;
+import com.mortensickel.obslogger.LocationService;
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -81,6 +82,8 @@ public class MainActivity extends Activity {
 	   	lServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
+                LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+                lService = binder.getService();
                 lServiceBound=true;
             }
 
@@ -232,7 +235,11 @@ public class MainActivity extends Activity {
 		btn.setEnabled(true);
 		myTimerThread.resetTime();
 		Date moment = new Date();
-		String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
+		if(lServiceBound){
+            Location loc=lService.getLocation();
+            Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+        }
+        String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
 		 String drop=tv.substring(tv.lastIndexOf(" ")+1);
 		 String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
 		 String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);

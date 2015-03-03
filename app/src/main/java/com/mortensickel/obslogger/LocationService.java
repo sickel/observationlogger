@@ -6,6 +6,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.content.Intent;
 import android.util.Log;
@@ -18,7 +19,17 @@ public class LocationService extends Service implements LocationListener {
 
     private Location location;
 	private IBinder lBinder;
+    private final IBinder mBinder = new LocalBinder();
 	private static String LOGTAG="Locservice";
+
+    public class LocalBinder extends Binder {
+        LocationService getService(){
+            return LocationService.this;
+        }
+    }
+
+
+
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		    //  Logging.i("CLAZZ", "onHandleIntent", "invoked");
@@ -43,13 +54,18 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public IBinder onBind(final Intent intent) {
-        return lBinder;
+        return mBinder;
     }
 
     public void onLocationChanged(final Location location) {
         this.location = location;   
         // TODO this is where you'd do something like context.sendBroadcast()
         Log.i(LOGTAG,location.toString());
+
+    }
+
+    public Location getLocation(){
+        return this.location;
     }
 
     public void onProviderDisabled(final String provider) {
