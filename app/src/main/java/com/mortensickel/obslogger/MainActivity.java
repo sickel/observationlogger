@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import java.io.*;
 import java.net.*;
 import java.util.List;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.ArrayList;
 
 import android.widget.LinearLayout.LayoutParams;
@@ -33,13 +33,14 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.util.Log;
+// import android.util.Log;
 import android.os.IBinder;
 import android.content.ServiceConnection;
 import android.content.*;
 import com.mortensickel.obslogger.LocationService.*;
 import android.os.SystemClock;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
         uuid=Installation.id(getApplicationContext());
       //  Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.main);
-		Thread showtimeThread = null;
+		Thread showtimeThread;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
 	 	Button bt=(Button)findViewById(R.id.btnConfirm);
@@ -120,49 +121,41 @@ public class MainActivity extends Activity {
 	
     @Override
     public void onResume() {
-        // Rewrite the parts on drag and drop names to avoid code redundancy
-        super.onResume();  // Always call the superclass method first
+        super.onResume();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
-        String dragnames=sharedPrefs.getString("dragNames", String.valueOf(R.string.dragnames));
-        Log.w("obslog","test");
-		List<String> drags= Arrays.asList(dragnames.split("\\s*,\\s*"));
-        // String[] drags={"240","242","244","245","260"};
+        String dragnames=sharedPrefs.getString("dragNames", getResources().getString(R.string.dragnames));
         ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
-        ll.removeAllViews();
-        for (String drag : drags) {
-            LinearLayout b = new LinearLayout(this);
-            b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
-            TextView tv = new TextView(this);
-            tv.setText(drag);
-            tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            tv.setGravity(Gravity.CENTER);
-            b.addView(tv);
-            b.setBackgroundResource(R.drawable.shape);
-			b.setOnDragListener(new MyDragListener());
-            tv.setOnTouchListener(new MyTouchListener());
-            ll.addView(b);
-        }
+        setZones(ll,dragnames);
         String dropnames=sharedPrefs.getString("dropNames", getResources().getString(R.string.dropnames));
-        List<String> drops= Arrays.asList(dropnames.split("\\s*,\\s*"));
-        //String[] drops={"Grazing","Resting","Walking","Other"};
         ll =(ViewGroup)findViewById(R.id.dropzones);
+        setZones(ll,dropnames);
+       // Toast.makeText(getApplicationContext(),"SFSG",Toast.LENGTH_SHORT).show();
+    }
+
+    public void setZones(ViewGroup ll, String names){
+       // rewrite to objects to avoid the if
+        List<String> zoneNames= Arrays.asList(names.split("\\s*,\\s*"));
         ll.removeAllViews();
-        for (String drop : drops) {
+        for (String zone : zoneNames) {
             LinearLayout b = new LinearLayout(this);
             b.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
             TextView tv = new TextView(this);
-            tv.setText(drop);
+            tv.setText(zone);
             tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             tv.setGravity(Gravity.CENTER);
             b.addView(tv);
             b.setBackgroundResource(R.drawable.shape);
-            b.setOnDragListener(new MyDropListener());
+            if(ll.getId()==R.id.dropzones) {
+                b.setOnDragListener(new MyDropListener());
+            }else{
+                b.setOnDragListener(new MyDragListener());
+                tv.setOnTouchListener(new MyTouchListener());
+            }
             ll.addView(b);
         }
     }
@@ -170,6 +163,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // TODO: Rewrite to use fragments
         getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
@@ -212,16 +206,16 @@ public class MainActivity extends Activity {
 	
 	public void saveObs(){
 		/* Reading saved observations and reupload those that are not uploaded 
-		   Rewrite file if changesaaaaaä*/
+		   Rewrite file if changes*/
 	//	Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
-		ArrayList<String> linelist = new ArrayList<String>();
+		ArrayList<String> linelist = new ArrayList<>();
 		try{
 			InputStream is=openFileInput(errorfile);
 			BufferedReader rdr =new BufferedReader(new InputStreamReader(is));
 			String myLine; 
 			while((myLine=rdr.readLine())!=null) linelist.add(myLine);	
 		}catch(Exception e){
-			Toast.makeText(getApplicationContext(),"File read error",Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(),getResources().getString(R.string.fileReadError),Toast.LENGTH_SHORT).show();
 		}
 		Toast.makeText(getApplicationContext(),"So far so good "+linelist.size(),Toast.LENGTH_SHORT).show();
 		for(String line :linelist){
@@ -229,18 +223,44 @@ public class MainActivity extends Activity {
 		}
 	}
 
+    public String hashMapToString(HashMap paramset){
+        String params="";
+        for(Map.Entry<String, String> entry : (Map<String, String[]>)paramset.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (params.equals("")) params = params + "&";
+            params=params+key+"="+(String)value;
+        }
+        return(params);
+    }
+
+
     public void undoAct(View v){
 	
 		Button btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(false);
-		String params="undo";
-		String status="";
-		try{
+        HashMap<String, String> paramset = new HashMap<String, String>();
+        paramset.put("undo","undo");
+        paramset.put("uuid",uuid);
+        Date moment = new Date();
+        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
+		paramset.put("ts",ts.toString());
+       	//String params=hashMapToString(paramset);
+        String params="testing";
+        params="";
+        for(Map.Entry<String, String> entry : paramset.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (!(params.equals(""))) params = params + "&";
+            params=params+key+"="+value;
+        }
+        try{
 			URL url = new URL(urlString+"?"+params);
 			new PostObservation().execute(url);
 		} catch (Exception e) {
-			status="-";
-			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
+			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
 		try{
 			String sep =";";
@@ -248,7 +268,7 @@ public class MainActivity extends Activity {
 
 			try {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-				outputStream.write((status+params+"\n").getBytes());
+				outputStream.write((params+"\n").getBytes());
 				outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -269,7 +289,7 @@ public class MainActivity extends Activity {
 		myTimerThread.resetTime();
 		Date moment = new Date();
         String params="";
-		HashMap<String, Object> paramset = new HashMap<String, Object>();
+		HashMap<String, String> paramset = new HashMap<String, String>();
 		try{
             if(lServiceBound){
                 Location loc=lService.getLocation();
@@ -278,18 +298,18 @@ public class MainActivity extends Activity {
 				   throw new Exception("Stale gps");
 			  	}
 				Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
-				paramset.put("age",age);
+				paramset.put("age",age.toString());
 				paramset.put("lat",String.valueOf(loc.getLatitude()));
 				paramset.put("lon",String.valueOf(loc.getLongitude()));
 				paramset.put("alt",String.valueOf(loc.getAltitude()));
 				paramset.put("acc",String.valueOf(loc.getAccuracy()));
 				paramset.put("gpstime",String.valueOf(loc.getTime()));
-				params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
+				//params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
             }else{
-                Toast.makeText(getApplicationContext(),"GPS service still not available",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSServiceNotAvailable),Toast.LENGTH_SHORT).show();
             }
         }catch(Exception e){
-            Toast.makeText(getApplicationContext(),"GPS location still not available",Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSLocationNotAvailable),Toast.LENGTH_LONG);
         }
         String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
 		String drop=tv.substring(tv.lastIndexOf(" ")+1);
@@ -299,12 +319,21 @@ public class MainActivity extends Activity {
 
 		try{
 			paramset.put("drop",drop);
-			paramset.put("ts",ts);
+			paramset.put("ts",ts.toString());
 			paramset.put("drag",drag);
 			paramset.put("uuid",uuid);
 			paramset.put("username",username);
 			paramset.put("project",project);
-			params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
+            params="";
+            for(Map.Entry<String, String> entry : paramset.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+
+                if (!(params.equals(""))) params = params + "&";
+                params=params+key+"="+(String)value;
+            }
+
+			//params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
 		    URL url = new URL(urlString+"?"+params);
 		    new PostObservation().execute(url);
 			status="+";
@@ -362,14 +391,7 @@ public class MainActivity extends Activity {
 				//	v.setBackgroundDrawable(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
-					// Dropped, reassign View to ViewGroup
-					/*View view = (View) event.getLocalState();
-					ViewGroup owner = (ViewGroup) view.getParent();
-					owner.removeView(view);
-					LinearLayout container = (LinearLayout) v;
-					container.addView(view);
-					view.setVisibility(View.VISIBLE);*/
-					break;
+						break;
 				case DragEvent.ACTION_DRAG_ENDED:
 					v.setBackground(normalShape);
 				default:
@@ -501,9 +523,9 @@ public class MainActivity extends Activity {
 					URLConnection conn = urls[0].openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
-					while((inputLine = in.readLine())!=null){}
-					//	showDialog(inputLine);
-					//	Toast.makeText(this, "result "+inputLine, Toast.LENGTH_LONG).show();
+					while((inputLine = in.readLine())!=null) {
+                       // Toast.makeText(getApplicationContext(), "result " + inputLine, Toast.LENGTH_LONG).show();
+                    }
 					in.close();
 				}catch(Exception e){
 					this.exception=e;

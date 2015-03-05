@@ -33,4 +33,7 @@
 	<string name="menu_togglegps">Toggle GPS</string>
 	<string name="starting_gps">Starting GPSservice</string>
 	<string name="stopping_gps">Stopping GPSservice</string>
+    <string name="fileReadError">File read error</string>
+    <string name="GPSServiceNotAvailable">GPS service still not available</string>
+    <string name="GPSLocationNotAvailable">GPS location not available</string>
 </resources>
