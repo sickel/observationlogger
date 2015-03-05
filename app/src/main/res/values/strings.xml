@@ -19,7 +19,8 @@
     <string name="pref_user_name_summary">User name - used in uploads</string>
     <string name="pref_project_name">Set project name</string>
     <string name="pref_project_name_summary">Project name - used in uploads</string>
-
+	<string name="pref_other_names">Other</string>
+	<string name="pref_other_names_summary">Other values</string>
     <string name="pref_drop_names">Set names of the drop fields</string>
     <string name="pref_drop_names_summary">Comma separated list</string>
     <string name="pref_drag_names">Set names of the drag fields</string>
@@ -29,4 +30,7 @@
     <string name="dropnames">Grazing,Resting,Walking,Other</string>
     <string name="dragnames">240,242,244,245,260</string>
 	<string name="menu_upload">Upload data</string>
-	</resources>
+	<string name="menu_togglegps">Toggle GPS</string>
+	<string name="starting_gps">Starting GPSservice</string>
+	<string name="stopping_gps">Stopping GPSservice</string>
+</resources>

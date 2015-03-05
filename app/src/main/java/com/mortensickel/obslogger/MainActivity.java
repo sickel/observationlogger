@@ -38,6 +38,7 @@ import android.os.IBinder;
 import android.content.ServiceConnection;
 import android.content.*;
 import com.mortensickel.obslogger.LocationService.*;
+import android.os.SystemClock;
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -76,6 +77,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onStart(){
 		super.onStart();
+		startGPS();
+		}
+	
+	protected void startGPS(){
+		
 		Intent intent=new Intent(this, LocationService.class);
 		intent.setAction("startListening");
 		startService(intent);
@@ -95,13 +101,20 @@ public class MainActivity extends Activity {
         bindService(intent,lServiceConnection,Context.BIND_AUTO_CREATE);
 	}
 	
+	
+	
 	@Override
 	protected void onStop(){
 		super.onStop();
-		if(lServiceBound){
-			unbindService(lServiceConnection);
-			lServiceBound=false;
+		if(lServiceBound){		
+			stopGPS();
 		}
+	}
+	
+	
+	protected void  stopGPS(){
+		unbindService(lServiceConnection);
+		lServiceBound=false;
 	}
 	
     @Override
@@ -129,11 +142,11 @@ public class MainActivity extends Activity {
             tv.setGravity(Gravity.CENTER);
             b.addView(tv);
             b.setBackgroundResource(R.drawable.shape);
-            b.setOnDragListener(new MyDragListener());
+			b.setOnDragListener(new MyDragListener());
             tv.setOnTouchListener(new MyTouchListener());
             ll.addView(b);
         }
-        String dropnames=sharedPrefs.getString("dropNames", String.valueOf(R.string.dropnames));
+        String dropnames=sharedPrefs.getString("dropNames", getResources().getString(R.string.dropnames));
         List<String> drops= Arrays.asList(dropnames.split("\\s*,\\s*"));
         //String[] drops={"Grazing","Resting","Walking","Other"};
         ll =(ViewGroup)findViewById(R.id.dropzones);
@@ -171,12 +184,30 @@ public class MainActivity extends Activity {
 			case R.id.menu_upload:
 				saveObs();	
 				break;
+			case R.id.menu_togglegps:
+			//	Toast.makeText(getApplicationContext(),"toggler 1",Toast.LENGTH_SHORT).show();
+				toggleGPS();	
+				break;
 
         }
 
         return true;
     }
 
+	
+	public void toggleGPS(){
+	//	Toast.makeText(getApplicationContext(),"Toggler",Toast.LENGTH_SHORT).show();
+		
+		if(lServiceBound){	
+			Toast.makeText(getApplicationContext(),getResources().getString( R.string.stopping_gps),Toast.LENGTH_SHORT).show();
+			stopGPS();
+		}else{
+			Toast.makeText(getApplicationContext(),getResources().getString( R.string.starting_gps),Toast.LENGTH_SHORT).show();
+			startGPS();
+		}
+		
+	}
+	
 	
 	public void saveObs(){
 		/* Reading saved observations and reupload those that are not uploaded 
@@ -239,7 +270,10 @@ public class MainActivity extends Activity {
         try{
             if(lServiceBound){
                 Location loc=lService.getLocation();
-                Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+				if((loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/(1e9*60)>5){
+				   throw new Exception("Stale gps");
+			   }
+				Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
                 params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
             }else{
                 Toast.makeText(getApplicationContext(),"GPS still not available",Toast.LENGTH_SHORT).show();
