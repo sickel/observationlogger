@@ -39,6 +39,7 @@ import android.content.ServiceConnection;
 import android.content.*;
 import com.mortensickel.obslogger.LocationService.*;
 import android.os.SystemClock;
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -259,6 +260,7 @@ public class MainActivity extends Activity {
 	}
 	public void saveAct(View v)
 	{
+	
 		//Toast.makeText(getApplicationContext(), "Clicked on Button ", Toast.LENGTH_LONG).show();
 		Button btn=(Button)findViewById(R.id.btnConfirm);
 		btn.setEnabled(false);
@@ -267,16 +269,24 @@ public class MainActivity extends Activity {
 		myTimerThread.resetTime();
 		Date moment = new Date();
         String params="";
-        try{
+		HashMap<String, Object> paramset = new HashMap<String, Object>();
+		try{
             if(lServiceBound){
                 Location loc=lService.getLocation();
-				if((loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/(1e9*60)>5){
+				Double age =(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;
+				if(age/60>5){
 				   throw new Exception("Stale gps");
-			   }
+			  	}
 				Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
-                params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
+				paramset.put("age",age);
+				paramset.put("lat",String.valueOf(loc.getLatitude()));
+				paramset.put("lon",String.valueOf(loc.getLongitude()));
+				paramset.put("alt",String.valueOf(loc.getAltitude()));
+				paramset.put("acc",String.valueOf(loc.getAccuracy()));
+				paramset.put("gpstime",String.valueOf(loc.getTime()));
+				params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
             }else{
-                Toast.makeText(getApplicationContext(),"GPS still not available",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"GPS service still not available",Toast.LENGTH_SHORT).show();
             }
         }catch(Exception e){
             Toast.makeText(getApplicationContext(),"GPS location still not available",Toast.LENGTH_LONG);
@@ -288,7 +298,13 @@ public class MainActivity extends Activity {
 		String status="";
 
 		try{
-		    params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
+			paramset.put("drop",drop);
+			paramset.put("ts",ts);
+			paramset.put("drag",drag);
+			paramset.put("uuid",uuid);
+			paramset.put("username",username);
+			paramset.put("project",project);
+			params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
 		    URL url = new URL(urlString+"?"+params);
 		    new PostObservation().execute(url);
 			status="+";
