@@ -222,10 +222,13 @@ public class MainActivity extends Activity {
 		//	if(line.charAt(0)=="-")
 		}
 	}
+/*
+
+Why does this not work when I pull it out in a function?
 
     public String hashMapToString(HashMap paramset){
         String params="";
-        for(Map.Entry<String, String> entry : (Map<String, String[]>)paramset.entrySet()) {
+        for(Map.Entry<String, String> entry : paramset.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
@@ -234,6 +237,7 @@ public class MainActivity extends Activity {
         }
         return(params);
     }
+*/
 
 
     public void undoAct(View v){
