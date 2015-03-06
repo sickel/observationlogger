@@ -212,19 +212,34 @@ public class MainActivity extends Activity {
 		try{
 			InputStream is=openFileInput(errorfile);
 			BufferedReader rdr =new BufferedReader(new InputStreamReader(is));
-			String myLine; 
-			while((myLine=rdr.readLine())!=null) linelist.add(myLine);	
+			String myLine;
+			
+			while ((myLine=rdr.readLine())!=null) 
+				if (!(myLine.substring(0,5).equals("Error")))
+					linelist.add(myLine);	
+			File dir=getFilesDir();
+			File from = new File(dir,errorfile);
+			File to = new File(dir,errorfile+".bak");
+			if(from.exists())
+				from.renameTo(to);
 		}catch(Exception e){
-			Toast.makeText(getApplicationContext(),getResources().getString(R.string.fileReadError),Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(),getResources().getString(R.string.noDataFound),Toast.LENGTH_SHORT).show();
 		}
-		Toast.makeText(getApplicationContext(),"So far so good "+linelist.size(),Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(),linelist.size()+" lines read - uploading",Toast.LENGTH_SHORT).show();
 		for(String line :linelist){
-		//	if(line.charAt(0)=="-")
+			try{
+				if (!(line.substring(0,5).equals("Error"))){
+					URL url = new URL(line);
+					new PostObservation().execute(url);
+				}
+			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 /*
 
-Why does this not work when I pull it out in a function?
+// Why does this not work when I pull it out in a function?
 
     public String hashMapToString(HashMap paramset){
         String params="";
@@ -301,7 +316,7 @@ Why does this not work when I pull it out in a function?
 				if(age/60>5){
 				   throw new Exception("Stale gps");
 			  	}
-				Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
+			//	Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
 				paramset.put("age",age.toString());
 				paramset.put("lat",String.valueOf(loc.getLatitude()));
 				paramset.put("lon",String.valueOf(loc.getLongitude()));

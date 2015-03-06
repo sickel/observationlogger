@@ -13,7 +13,7 @@
     <string name="useGPS">Use GPS</string>
     <string name="miscSettings">Misc. settings</string>
 
-
+	<string name="noDataFound">All data uploaded</string>
 
     <string name="pref_user_name">Set user name</string>
     <string name="pref_user_name_summary">User name - used in uploads</string>
