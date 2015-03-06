@@ -3,7 +3,7 @@ package com.mortensickel.obslogger;
 import java.text.*;
 import java.util.Arrays;
 import java.util.Date;
-
+import android.app.ActionBar;
 import android.location.Location;
 import android.util.TypedValue;
 import android.os.*;
@@ -42,6 +42,14 @@ import android.os.SystemClock;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
+
 public class MainActivity extends Activity {
 	LocationService lService;
 	boolean lServiceBound=false;
@@ -58,12 +66,24 @@ public class MainActivity extends Activity {
     private int timeout=10;
     // Messenger lService = null;
     //private final String uuid="txt";
+
+
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        uuid=Installation.id(getApplicationContext());
-      //  Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
+	//	setContentView(R.layout.activity_main);
+	
+		uuid=Installation.id(getApplicationContext());
+		//  Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.main);
+		
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.actionbar);
+		
 		Thread showtimeThread;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();

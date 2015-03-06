@@ -55,31 +55,42 @@ Planned:
 
 User settable data
   
-   Turn of uploading, only store data locally
+* Turn of uploading, only store data locally
   
-   Select to use GPS
+*   Select to use GPS
 
 
 Upload settings data from server
 
-  Values for the drag and drop fields could be stored on server and fetched. Use the project name  to select if there are several possible sets.
+*  Values for the drag and drop fields could be stored on server and fetched. Use the project name  to select if there are several possible sets.
+
 
 Locally stored data
 
-   Make a system to make it easier to upload locally stored data that have not been uploaded
+*   Make a system to make it easier to upload locally stored data that have not been uploaded
 
-   View log of stored data
+*   View log of stored data
   
 Use a second tab to show more alternatives
 
-   In some cases there are several seldom used alternatives, those can be put on a second tab trigged by a drop on a     designated drop field
+*   In some cases there are several seldom used alternatives, those can be put on a second tab trigged by a drop on a     designated drop field
 
 
 Make a text field for ad-hoc alternatives
 
-   There may be a need to register ad-hoc alternatives or more description. 
+*   There may be a need to register ad-hoc alternatives or more description. 
    
 
 Upload photos
 
-   "A picture speaks more than 1000 words" - sometimes
+*   "A picture speaks more than 1000 words" - sometimes
+
+User interface
+
+*   Make use of the action bar
+
+*   Icon
+
+Misc
+
+* RESTcompatible. use post to upload.
