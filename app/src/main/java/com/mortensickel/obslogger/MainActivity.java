@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
 		actionBar.setCustomView(R.layout.actionbar);
-		
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		Thread showtimeThread;
 		showtimeThread = new Thread(myTimerThread);
 		showtimeThread.start();
