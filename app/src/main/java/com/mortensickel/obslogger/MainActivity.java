@@ -82,7 +82,8 @@ public class MainActivity extends Activity {
 		
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.actionbar);
+        assert actionBar != null;
+        actionBar.setCustomView(R.layout.actionbar);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		Thread showtimeThread;
 		showtimeThread = new Thread(myTimerThread);
@@ -91,6 +92,7 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
+
 	}
 	
 	private ServiceConnection lServiceConnection;
@@ -154,6 +156,13 @@ public class MainActivity extends Activity {
         ll =(ViewGroup)findViewById(R.id.dropzones);
         setZones(ll,dropnames);
        // Toast.makeText(getApplicationContext(),"SFSG",Toast.LENGTH_SHORT).show();
+        Integer lnum=0;
+        try {
+            lnum=linenumbers(new File(getFilesDir(), errorfile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        showStatus(lnum.toString());
     }
 
     public void setZones(ViewGroup ll, String names){
@@ -256,6 +265,14 @@ public class MainActivity extends Activity {
 				Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 			}
 		}
+        Integer lnum=0;
+        try {
+            lnum=linenumbers(new File(getFilesDir(), errorfile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
+        tvstatus.setText(lnum.toString());
 	}
 /*
 
@@ -286,12 +303,10 @@ public class MainActivity extends Activity {
         String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
 		paramset.put("ts",ts.toString());
        	//String params=hashMapToString(paramset);
-        String params="testing";
-        params="";
+        String params="";
         for(Map.Entry<String, String> entry : paramset.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-
             if (!(params.equals(""))) params = params + "&";
             params=params+key+"="+value;
         }
@@ -302,7 +317,6 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
 		try{
-			String sep =";";
 			FileOutputStream outputStream;
 
 			try {
@@ -315,12 +329,26 @@ public class MainActivity extends Activity {
 		}catch (Exception e) {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
 		}
-		
+        Integer lnum=0;
+        try {
+            lnum=linenumbers(new File(getFilesDir(), errorfile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        showStatus(lnum.toString());
 	}
+
+
+    public void showStatus(String status){
+        TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
+        tvstatus.setText(status);
+    }
+
+
 	public void saveAct(View v)
 	{
 	
-		//Toast.makeText(getApplicationContext(), "Clicked on Button ", Toast.LENGTH_LONG).show();
+		//Toast.makeText(getApplicationContext(), urlString, Toast.LENGTH_LONG).show();
 		Button btn=(Button)findViewById(R.id.btnConfirm);
 		btn.setEnabled(false);
 		btn=(Button)findViewById(R.id.btnUndo);
@@ -354,7 +382,6 @@ public class MainActivity extends Activity {
 		String drop=tv.substring(tv.lastIndexOf(" ")+1);
 		String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
 		String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
-		String status="";
 
 		try{
 			paramset.put("drop",drop);
@@ -367,26 +394,23 @@ public class MainActivity extends Activity {
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-
                 if (!(params.equals(""))) params = params + "&";
-                params=params+key+"="+(String)value;
+                params=params+key+"="+value;
             }
 
 			//params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
 		    URL url = new URL(urlString+"?"+params);
 		    new PostObservation().execute(url);
-			status="+";
 		} catch (Exception e) {
-		    status="-";
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
 		try{
-		    String sep =";";
+
 		    FileOutputStream outputStream;
 
              try {
                 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-                outputStream.write((status+params+"\n").getBytes());
+                outputStream.write((params+"\n").getBytes());
                 outputStream.close();
              } catch (Exception e) {
                 e.printStackTrace();
@@ -397,8 +421,31 @@ public class MainActivity extends Activity {
 		TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
 		String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
 		txtLast.setText(otime+": "+drag+" "+drop);
-	} 
-	
+        Integer lnum=0;
+        try {
+            lnum=linenumbers(new File(getFilesDir(), errorfile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
+        tvstatus.setText(lnum.toString());
+    }
+
+
+    Integer linenumbers(File file) throws IOException
+    {
+
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+
+        int lineCount = 0;
+        while ((line = br.readLine()) != null)
+            if (!(line.substring(0, 5).equals("Error"))) lineCount++;
+        return (lineCount);
+    }
+
+
 	
 	private final class MyTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -420,7 +467,7 @@ public class MainActivity extends Activity {
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
-			switch (event.getAction()) {
+			switch (action) {
 				case DragEvent.ACTION_DRAG_STARTED:
 					// do nothing
 					break;
@@ -454,7 +501,7 @@ public class MainActivity extends Activity {
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
-			switch (event.getAction()) {
+			switch (action) {
 				case DragEvent.ACTION_DRAG_STARTED:
 					// do nothing
 					break;
@@ -563,6 +610,7 @@ public class MainActivity extends Activity {
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
 					while((inputLine = in.readLine())!=null) {
+                       // reading the servers answer. Ignoring what we get. May check for correct return later
                        // Toast.makeText(getApplicationContext(), "result " + inputLine, Toast.LENGTH_LONG).show();
                     }
 					in.close();
