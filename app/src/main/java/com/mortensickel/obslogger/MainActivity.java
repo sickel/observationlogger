@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import android.app.ActionBar;
 import android.location.Location;
+import android.util.Log;
 import android.util.TypedValue;
 import android.os.*;
 import android.view.Gravity;
@@ -52,7 +53,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	LocationService lService;
-	boolean lServiceBound=false;
+
+    private static String LOGTAG="Obslogger";
+
+    boolean lServiceBound=false;
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private boolean doUpload=true;
     private String savefile="observations.dat";
@@ -259,7 +263,9 @@ public class MainActivity extends Activity {
 			try{
 				if (!(line.substring(0,5).equals("Error"))){
 					// URL url = new URL(line);
-					new PostObservation().execute(line);
+                    HashMap<String, String> paramset = new HashMap<String, String>();
+                    paramset.put("parameters",line);
+                    new PostObservation().execute(paramset);
 				}
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
@@ -303,16 +309,16 @@ public class MainActivity extends Activity {
         String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
 		paramset.put("ts",ts.toString());
        	//String params=hashMapToString(paramset);
-        String params="";
+        /* String params="";
         for(Map.Entry<String, String> entry : paramset.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             if (!(params.equals(""))) params = params + "&";
             params=params+key+"="+value;
-        }
+        }*/
         try{
 			//URL url = new URL(urlString+"?"+params);
-			new PostObservation().execute(params);
+			new PostObservation().execute(paramset);
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
@@ -321,8 +327,9 @@ public class MainActivity extends Activity {
 
 			try {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-				outputStream.write((params+"\n").getBytes());
-				outputStream.close();
+				// outputStream.write((params+"\n").getBytes());
+				// TODO: Find out what to do here - shold all calls be logged?
+                outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -400,7 +407,7 @@ public class MainActivity extends Activity {
 
 			//params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
 		    // URL url = new URL(urlString+"?"+params);
-		    new PostObservation().execute(params);
+		    new PostObservation().execute(paramset);
 		} catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
@@ -560,9 +567,11 @@ public class MainActivity extends Activity {
 								
 							}
 							String ct;
-							if(sec > 59){
+                            if(sec > 59){
 							// TODO: hour if > 60 min
 								long min=sec/60;
+
+                                //if(min )
 								sec=sec-60*min;
 								if(sec < 10){
 									ct=min+":0"+sec;
@@ -600,13 +609,26 @@ public class MainActivity extends Activity {
 			}
 		}
 		
-		private class PostObservation extends AsyncTask<String, Void,Integer>{
+		private class PostObservation extends AsyncTask<HashMap<String,String>, Void,Integer>{
 
 			private Exception exception;
 			private Integer status;
-			protected Integer doInBackground(String... params){
-				try{
-                    URL url = new URL(urlString+"?"+params[0]);
+
+			protected Integer doInBackground(HashMap<String,String>... paramsets){
+                HashMap<String,String> paramset = new HashMap<String, String>();
+                paramset=paramsets[0];
+                String params=paramset.get("parameters");
+               if(params == null) {
+                    params="";
+                    for (Map.Entry<String, String> entry : paramset.entrySet()) {
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+                        if (!(params.equals(""))) params = params + "&";
+                        params = params + key + "=" + value;
+                    }
+                }
+                try{
+                    URL url = new URL(urlString+"?"+params);
                     URLConnection conn = url.openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
@@ -636,6 +658,9 @@ public class MainActivity extends Activity {
                 status=10;
 				return status;
 			}
+
+
+
 
 			protected void onPostExecute(Long res){
 				if(status==0){
