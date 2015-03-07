@@ -277,25 +277,8 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
-        tvstatus.setText(lnum.toString());
+        showStatus(lnum.toString());
 	}
-/*
-
-// Why does this not work when I pull it out in a function?
-
-    public String hashMapToString(HashMap paramset){
-        String params="";
-        for(Map.Entry<String, String> entry : paramset.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            if (params.equals("")) params = params + "&";
-            params=params+key+"="+(String)value;
-        }
-        return(params);
-    }
-*/
 
 
     public void undoAct(View v){
@@ -347,6 +330,8 @@ public class MainActivity extends Activity {
 
 
     public void showStatus(String status){
+        if (status.equals("0")) status = ""; else
+            status = status + " " + getResources().getString(R.string.setsNotUploaded);
         TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
         tvstatus.setText(status);
     }
@@ -434,8 +419,7 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
-        tvstatus.setText(lnum.toString());
+        showStatus(lnum.toString());
     }
 
 

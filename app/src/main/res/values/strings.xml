@@ -36,4 +36,5 @@
     <string name="fileReadError">File read error</string>
     <string name="GPSServiceNotAvailable">GPS service still not available</string>
     <string name="GPSLocationNotAvailable">GPS location not available</string>
+    <string name="setsNotUploaded">sets not uploaded</string>
 </resources>
