@@ -36,11 +36,21 @@ User settable project name (used in upload)
 
 V 1.2 March 3 2015
 
-Using gps to log the position where an observation is done.
+* Using gps to log the position where an observation is done.
+
+
 
 V 1.3 March 6 2015
 
-Upload of stored data is working, although it must be easier to see if there are any data that are not uploaded
+* Upload of stored data is working, although it must be easier to see if there are any data that are not uploaded
+
+
+
+V 1.4 March 7 2015
+
+* Displaying if there are points that are not uploaded
+
+* Code cleaning
 
 
 Bugs:
@@ -57,7 +67,7 @@ User settable data
   
 * Turn of uploading, only store data locally
   
-*   Select to use GPS
+* Select to use GPS
 
 
 Upload settings data from server
@@ -66,8 +76,6 @@ Upload settings data from server
 
 
 Locally stored data
-
-*   Make a system to make it easier to upload locally stored data that have not been uploaded
 
 *   View log of stored data
   
@@ -86,8 +94,6 @@ Upload photos
 *   "A picture speaks more than 1000 words" - sometimes
 
 User interface
-
-*   Make use of the action bar
 
 *   Icon
 
