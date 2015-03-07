@@ -258,8 +258,8 @@ public class MainActivity extends Activity {
 		for(String line :linelist){
 			try{
 				if (!(line.substring(0,5).equals("Error"))){
-					URL url = new URL(line);
-					new PostObservation().execute(url);
+					// URL url = new URL(line);
+					new PostObservation().execute(line);
 				}
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
@@ -311,8 +311,8 @@ public class MainActivity extends Activity {
             params=params+key+"="+value;
         }
         try{
-			URL url = new URL(urlString+"?"+params);
-			new PostObservation().execute(url);
+			//URL url = new URL(urlString+"?"+params);
+			new PostObservation().execute(params);
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
@@ -399,8 +399,8 @@ public class MainActivity extends Activity {
             }
 
 			//params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
-		    URL url = new URL(urlString+"?"+params);
-		    new PostObservation().execute(url);
+		    // URL url = new URL(urlString+"?"+params);
+		    new PostObservation().execute(params);
 		} catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
@@ -561,6 +561,7 @@ public class MainActivity extends Activity {
 							}
 							String ct;
 							if(sec > 59){
+							// TODO: hour if > 60 min
 								long min=sec/60;
 								sec=sec-60*min;
 								if(sec < 10){
@@ -596,17 +597,17 @@ public class MainActivity extends Activity {
 						Thread.currentThread().interrupt();
 					}catch(Exception e){}
 				}
-				// TODO: Implement this method
 			}
 		}
 		
-		private class PostObservation extends AsyncTask<URL, Void,Integer>{
+		private class PostObservation extends AsyncTask<String, Void,Integer>{
 
 			private Exception exception;
 			private Integer status;
-			protected Integer doInBackground(URL... urls){	
+			protected Integer doInBackground(String... params){
 				try{
-					URLConnection conn = urls[0].openConnection();
+                    URL url = new URL(urlString+"?"+params[0]);
+                    URLConnection conn = url.openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
 					while((inputLine = in.readLine())!=null) {
@@ -623,7 +624,7 @@ public class MainActivity extends Activity {
 					try {
 						outputStream = openFileOutput(errorfile, getApplicationContext().MODE_APPEND);
 						outputStream.write(("Error "+e.getMessage()+"\n").getBytes());
-						outputStream.write((urls[0]+"\n").getBytes());
+						outputStream.write((params+"\n").getBytes());
 						outputStream.close();
 					} catch (Exception fe) {
 						fe.printStackTrace();
