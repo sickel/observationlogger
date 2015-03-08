@@ -5,7 +5,7 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/obsloggerlogo_bitmap"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity android:name=".UserSettingsActivity" />

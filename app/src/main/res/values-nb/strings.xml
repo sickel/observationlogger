@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Observations</string>
+    <string name="GPSLocationNotAvailable">Har ikke GPS-posisjon</string>
+    <string name="GPSServiceNotAvailable">GPSen er enda ikke klar</string>
+    <string name="confirm">Bekreft</string>
+    <string name="dropnames">Beite,Hvile,Gange,Annet</string>
+    <string name="fileReadError">Feil ved lesing av fil</string>
+    <string name="last_obs">Siste observasjon</string>
+    <string name="menu_settings">Innstillinger</string>
+    <string name="menu_togglegps">Skru GPS av eller på</string>
+    <string name="menu_upload">Last opp data</string>
+    <string name="miscSettings">Forskjellig</string>
+    <string name="noDataFound">Alle data er lastet opp</string>
+    <string name="pref_drag_names"></string>
+    <string name="undo">Angre</string>
+    <string name="upload">Last opp data til serveren</string>
+    <string name="uploadurl">URL for opplasting</string>
+    <string name="useGPS">Bruk GPS</string>
+    <string name="waittime">Tid siden siste observasjon</string>
+    <string name="pref_user_name">Brukernavn</string>
+    <string name="pref_user_name_summary">brukt i opplasting</string>
+    <string name="stopping_gps">Stopper GPSen</string>
+    <string name="starting_gps">Starter GPSen</string>
+    <string name="pref_use_sec_values_summ"></string>
+    <string name="pref_use_sec_values">Bruk alternative verdier</string>
+    <string name="pref_project_name">Prosjektnavn</string>
+    <string name="pref_other_names_summary">Andre verdier</string>
+    <string name="pref_other_names">Annet</string>
+    <string name="pref_drop_names_summary">Kommaseparert liste</string>
+</resources>

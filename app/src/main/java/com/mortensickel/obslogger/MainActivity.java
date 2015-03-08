@@ -1,46 +1,56 @@
 package com.mortensickel.obslogger;
 
-import java.text.*;
-import java.util.Arrays;
-import java.util.Date;
 import android.app.ActionBar;
-import android.location.Location;
-import android.util.Log;
-import android.util.TypedValue;
-import android.os.*;
-import android.view.Gravity;
-import android.widget.*;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.util.TypedValue;
 import android.view.DragEvent;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import java.io.*;
-import java.net.*;
-import java.util.List;
-import java.util.ArrayList;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.os.IBinder;
-import android.content.ServiceConnection;
-import android.content.*;
-import com.mortensickel.obslogger.LocationService.*;
-import android.os.SystemClock;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mortensickel.obslogger.LocationService.LocalBinder;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 // TODO: View log of stored data, export them
@@ -53,7 +63,9 @@ public class MainActivity extends Activity {
 	LocationService lService;
 
     private static String LOGTAG="Obslogger";
-
+    private String lastdrag = "";
+    private String lastdrop = "";
+    private String lasttimestamp = "";
     boolean lServiceBound=false;
 	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
     private boolean doUpload=true;
@@ -85,10 +97,11 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 
 	}
-	
-	private ServiceConnection lServiceConnection;
-	
-// www.trution.com/2014/11/bound-service-example-android/
+
+
+    private ServiceConnection lServiceConnection;
+
+    // www.trution.com/2014/11/bound-service-example-android/
 	@Override
 	protected void onStart(){
 		super.onStart();
@@ -147,14 +160,26 @@ public class MainActivity extends Activity {
         String dropnames=sharedPrefs.getString("dropNames", getResources().getString(R.string.dropnames));
         ll =(ViewGroup)findViewById(R.id.dropzones);
         setZones(ll,dropnames);
-       // Toast.makeText(getApplicationContext(),"SFSG",Toast.LENGTH_SHORT).show();
-        Integer lnum=0;
+
+        Integer lnum = 0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
+            if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
+            if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
+            Button bt = (Button) findViewById(R.id.btnConfirm);
+            bt.setEnabled(true);
+            myTimerThread.resetTime();
+        }
         showStatus(lnum.toString());
+        TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
+        txtLast.setText(lasttimestamp + ": " + lastdrag + " " + lastdrop);
+
     }
 
     public void setZones(ViewGroup ll, String names){
@@ -204,6 +229,7 @@ public class MainActivity extends Activity {
 			    toggleGPS();
 				break;
             case R.id.menu_testlist:
+                // TODO: Remove this when this is displayed through a drop
                 Intent myIntent = new Intent(getApplicationContext(), itemList.class);
                 startActivityForResult(myIntent, 0);
                 break;
@@ -277,8 +303,8 @@ public class MainActivity extends Activity {
         paramset.put("undo","undo");
         paramset.put("uuid",uuid);
         Date moment = new Date();
-        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+Z").format(moment);
-		paramset.put("ts",ts);
+        String ts = new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z").format(moment);
+        paramset.put("ts",ts);
        	try{
 			new PostObservation().execute(paramset);
 		} catch (Exception e) {
@@ -290,7 +316,7 @@ public class MainActivity extends Activity {
 			try {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
 				// outputStream.write((params+"\n").getBytes());
-				// TODO: Find out what to do here - shold all calls be logged?
+                // TODO: Find out what to do here - should all calls be logged?
                 outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -322,8 +348,8 @@ public class MainActivity extends Activity {
 		btn.setEnabled(false);
 		btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(true);
-	//	myTimerThread.resetTime();
-		Date moment = new Date();
+        // myTimerThread.resetTime();
+        Date moment = new Date();
         String params="";
 		HashMap<String, String> paramset = new HashMap<String, String>();
 		try{
@@ -348,13 +374,15 @@ public class MainActivity extends Activity {
         }
         String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
 		String drop=tv.substring(tv.lastIndexOf(" ")+1);
-		String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
-		String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
+        lastdrop = drop;
+        String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
+        lastdrag = drag;
+        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
 
 		try{
 			paramset.put("drop",drop);
-			paramset.put("ts",ts.toString());
-			paramset.put("drag",drag);
+            paramset.put("ts", ts);
+            paramset.put("drag",drag);
 			paramset.put("uuid",uuid);
 			paramset.put("username",username);
 			paramset.put("project",project);
@@ -383,9 +411,10 @@ public class MainActivity extends Activity {
 		}catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
-		TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
 		String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-		txtLast.setText(otime+": "+drag+" "+drop);
+        lasttimestamp = otime;
+        TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
+        txtLast.setText(otime + ": " + drag + " " + drop);
         Integer lnum=0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -477,17 +506,32 @@ public class MainActivity extends Activity {
                     if (APILEVEL>15)  v.setBackground(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
-					// Dropped, reassign View to ViewGroup
+
+
+                    // Dropped, reassign View to ViewGroup
 					myTimerThread.resetTime();
-					Date moment = new Date();		
-					TextView tv = (TextView)event.getLocalState();
-					String t=tv.getText().toString();
-					Object sv = ((ViewGroup)v).getChildAt(0);
-					String st = ((TextView)sv).getText().toString();	
-					TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
-					String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-					Button bt=(Button)findViewById(R.id.btnConfirm);
-					bt.setEnabled(true);
+                    Date moment = new Date();
+                    LinearLayout ll = (LinearLayout) v.getParent();
+                    Integer n = ll.getChildCount();
+                    String st = "";
+
+                    TextView tv = (TextView) event.getLocalState();
+                    String t = tv.getText().toString();
+                    TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
+                    String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
+                    if (ll.getChildAt(n - 1) == v) {
+                        // TODO: Check if last child - if so open activity itemlist
+                        //   Toast.makeText(getApplicationContext(),"Last child",Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(getApplicationContext(), itemList.class);
+                        i.putExtra("lastdrag", t);
+                        i.putExtra("lasttime", otime);
+                        startActivityForResult(i, 0);
+                    } else {
+                        Object sv = ((ViewGroup) v).getChildAt(0);
+                        st = ((TextView) sv).getText().toString();
+                    }
+                    Button bt = (Button) findViewById(R.id.btnConfirm);
+                    bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
 					bt.setEnabled(false);
 					txtLast.setText(otime+": "+t+" "+st);

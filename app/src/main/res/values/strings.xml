@@ -27,9 +27,16 @@
     <string name="pref_drag_names_summary">Comma separated list</string>
     <string name="pref_timeout">Timeout</string>
     <string name="pref_timeout_summary">Settings to confirm or undo</string>
+    <string name="pref_sec_values">Secondary values</string>
+    <string name="pref_sec_values_summary">Secondary values</string>
+    <string name="valueSettings">Set values to log</string>
+    <string name="valueSettings_summary">Set values to log</string>
+    <string name="pref_use_sec_values">Use secondary values</string>
+    <string name="pref_use_sec_values_summ">Comma separated list</string>
+    <string name="secnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
     <string name="dropnames">Grazing,Resting,Walking,Other</string>
-    <string name="dragnames">240,242,244,245,260</string>
-	<string name="menu_upload">Upload data</string>
+    <string name="dragnames" translatable="false">240,242,244,245,260</string>
+    <string name="menu_upload">Upload data</string>
 	<string name="menu_togglegps">Toggle GPS</string>
 	<string name="starting_gps">Starting GPSservice</string>
 	<string name="stopping_gps">Stopping GPSservice</string>

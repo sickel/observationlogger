@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:summary="@string/uploaddata"
         android:title="@string/uploaddata">
         <CheckBoxPreference
-            android:key="doUpload"
             android:defaultValue="true"
+            android:key="doUpload"
             android:summary="@string/upload"
-            android:title="@string/upload"
-            />
-        <EditTextPreference android:title="@string/uploadurl"
-            android:key="uploadURL"
+            android:title="@string/upload" />
+        <EditTextPreference
+            android:defaultValue="http://hhv3.sickel.net/obstest/"
             android:dependency="doUpload"
-            android:summary="@string/uploadurl"
             android:dialogTitle="@string/uploadurl"
-            android:defaultValue="http://hhv3.sickel.net/obstest/"/>
-   </PreferenceCategory>
+            android:key="uploadURL"
+            android:summary="@string/uploadurl"
+            android:title="@string/uploadurl" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="@string/valueSettings_summary"
+        android:title="@string/valueSettings">
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/pref_drop_names"
+            android:key="dropNames"
+            android:summary="@string/pref_drop_names_summary"
+            android:title="@string/pref_drop_names" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/pref_drag_names"
+            android:key="dragNames"
+            android:summary="@string/pref_drag_names_summary"
+            android:title="@string/pref_drag_names" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="useSecValues"
+            android:summary="@string/pref_use_sec_values_summ"
+            android:title="@string/pref_use_sec_values" />
+        <EditTextPreference
+            android:defaultValue="Drinking,Fighting,Dancing"
+            android:dependency="useSecValues"
+            android:dialogTitle="@string/pref_sec_values"
+            android:key="secValues"
+            android:summary="@string/pref_sec_values_summary"
+            android:title="@string/pref_sec_values" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:summary="@string/miscSettings"
         android:title="@string/miscSettings">
         <CheckBoxPreference
-            android:key="useGPS"
             android:defaultValue="true"
+            android:key="useGPS"
             android:summary="@string/useGPS"
-            android:title="@string/useGPS"
-            />
-        <EditTextPreference android:title="@string/pref_user_name"
+            android:title="@string/useGPS" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/pref_user_name"
             android:key="userName"
             android:summary="@string/pref_user_name_summary"
-            android:dialogTitle="@string/pref_user_name"
-            android:defaultValue=""/>
-    <EditTextPreference android:title="@string/pref_project_name"
-        android:key="projectName"
-        android:summary="@string/pref_project_name_summary"
-        android:dialogTitle="@string/pref_project_name"
-        android:defaultValue=""/>
-    <EditTextPreference android:title="@string/pref_drop_names"
-        android:key="dropNames"
-        android:summary="@string/pref_drop_names_summary"
-        android:dialogTitle="@string/pref_drop_names"
-        android:defaultValue=""/>
-    <EditTextPreference android:title="@string/pref_drag_names"
-        android:key="dragNames"
-        android:summary="@string/pref_drag_names_summary"
-        android:dialogTitle="@string/pref_drag_names"
-        android:defaultValue=""/>
-	<EditTextPreference android:title="@string/pref_other_names"
-			android:key="otherNames"
-			android:summary="@string/pref_other_names_summary"
-			android:dialogTitle="@string/pref_other_names"
-			android:defaultValue=""/>
+            android:title="@string/pref_user_name" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/pref_project_name"
+            android:key="projectName"
+            android:summary="@string/pref_project_name_summary"
+            android:title="@string/pref_project_name" />
         <EditTextPreference
             android:defaultValue="20"
             android:dialogTitle="@string/pref_timeout"
@@ -57,7 +71,7 @@
             android:key="pref_timeout"
             android:summary="@string/pref_timeout_summary"
             android:title="@string/pref_timeout" />
-</PreferenceCategory>
+    </PreferenceCategory>
     <!--Any other categories include here
     -->
 </PreferenceScreen>
