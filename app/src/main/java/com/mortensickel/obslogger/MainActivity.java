@@ -55,7 +55,6 @@ import java.util.Map;
 
 // TODO: View log of stored data, export them
 // TODO: Fetch settings data from server
-// TODO: Activity to list more alternatives
 // TODO: Possibility to type in observations
 // TODO: Photo
 
@@ -228,11 +227,7 @@ public class MainActivity extends Activity {
 			case R.id.menu_togglegps:
 			    toggleGPS();
 				break;
-            case R.id.menu_testlist:
-                // TODO: Remove this when this is displayed through a drop
-                Intent myIntent = new Intent(getApplicationContext(), itemList.class);
-                startActivityForResult(myIntent, 0);
-                break;
+
 
         }
 
@@ -520,8 +515,6 @@ public class MainActivity extends Activity {
                     TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
                     String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
                     if (ll.getChildAt(n - 1) == v) {
-                        // TODO: Check if last child - if so open activity itemlist
-                        //   Toast.makeText(getApplicationContext(),"Last child",Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(getApplicationContext(), itemList.class);
                         i.putExtra("lastdrag", t);
                         i.putExtra("lasttime", otime);
