@@ -53,6 +53,15 @@ V 1.4 March 7 2015
 * Code cleaning
 
 
+v 1.5 March 8 2015
+
+* Two level selection.
+
+* New icon
+
+* Code cleaning
+
+
 Bugs:
 
 
@@ -79,9 +88,6 @@ Locally stored data
 
 *   View log of stored data
   
-Use a second tab to show more alternatives
-
-*   In some cases there are several seldom used alternatives, those can be put on a second tab trigged by a drop on a     designated drop field
 
 
 Make a text field for ad-hoc alternatives
