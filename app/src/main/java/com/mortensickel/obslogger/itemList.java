@@ -45,7 +45,7 @@ public class itemList extends Activity {
                 Intent myIntent = new Intent(view.getContext(), MainActivity.class);
                 startActivityForResult(myIntent, 0);
             }
-            // TODO: Return data to mainactivity
+
             // TODO: Must indicate i selected (to be shown in "Last observation") or free text
             // TODO: Freetext should be indicated to exist in "Last observation", but not quoted
             // TODO: Maybe first 10-15 letters in Freetext and ...
@@ -61,6 +61,7 @@ public class itemList extends Activity {
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
         //String altlist=sharedPrefs.getString("altList", );
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
+        obsList.clear();
         for (String obs : observations) {
             obsList.add(createObservation("observation", obs));
         }

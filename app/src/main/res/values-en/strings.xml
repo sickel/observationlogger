@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="last_obs">Last observation</string>
+    <string name="waittime">Time since last observation : </string>
     <string name="app_name">Observations</string>
+    <string name="confirm">Confirm</string>
+    <string name="undo">Undo</string>
+    <string name="uploaddata">Data uploading</string>
+
+    <string name="upload">Upload data to server</string>
+    <string name="uploadurl">Url to upload to</string>
+    <string name="menu_settings">Settings</string>
+    <string name="useGPS">Use GPS</string>
+    <string name="miscSettings">Misc. settings</string>
+
+    <string name="noDataFound">All data uploaded</string>
+
+    <string name="pref_user_name">Set user name</string>
+    <string name="pref_user_name_summary">User name - used in uploads</string>
+    <string name="pref_project_name">Set project name</string>
+    <string name="pref_project_name_summary">Project name - used in uploads</string>
+    <string name="pref_other_names">Other</string>
+    <string name="pref_other_names_summary">Other values</string>
+    <string name="pref_drop_names">Set names of the drop fields</string>
+    <string name="pref_drop_names_summary">Comma separated list</string>
+    <string name="pref_drag_names">Set names of the drag fields</string>
+    <string name="pref_drag_names_summary">Comma separated list</string>
+    <string name="pref_timeout">Timeout</string>
+    <string name="pref_timeout_summary">Settings to confirm or undo</string>
+    <string name="pref_sec_values">Secondary values</string>
+    <string name="pref_sec_values_summary">Secondary values</string>
+    <string name="valueSettings">Set values to log</string>
+    <string name="valueSettings_summary">Set values to log</string>
+    <string name="pref_use_sec_values">Use secondary values</string>
+    <string name="pref_use_sec_values_summ">Comma separated list</string>
+    <string name="secnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
+    <string name="dropnames">Grazing,Resting,Walking,Other</string>
+    <string name="dragnames">240,242,244,245,260</string>
+    <string name="menu_upload">Upload data</string>
+    <string name="menu_togglegps">Toggle GPS</string>
+    <string name="starting_gps">Starting GPSservice</string>
+    <string name="stopping_gps">Stopping GPSservice</string>
+    <string name="fileReadError">File read error</string>
+    <string name="GPSServiceNotAvailable">GPS service still not available</string>
+    <string name="GPSLocationNotAvailable">GPS location not available</string>
+    <string name="setsNotUploaded">sets not uploaded</string>
 </resources>
