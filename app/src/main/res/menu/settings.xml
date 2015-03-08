@@ -3,4 +3,5 @@
     <item android:id="@+id/menu_settings"  android:title="@string/menu_settings" android:icon="@android:drawable/ic_menu_preferences" />
     <item android:id="@+id/menu_upload"  android:title="@string/menu_upload" />
 	<item android:id="@+id/menu_togglegps"  android:title="@string/menu_togglegps" />
+    <item android:id="@+id/menu_testlist"  android:title="@string/menu_testlist" />
 </menu>

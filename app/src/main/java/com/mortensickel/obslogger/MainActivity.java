@@ -21,20 +21,16 @@ import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-// import android.widget.LinearLayout;
 import java.io.*;
 import java.net.*;
 import java.util.List;
-//import java.util.Scanner;
 import java.util.ArrayList;
-
 import android.widget.LinearLayout.LayoutParams;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-// import android.util.Log;
 import android.os.IBinder;
 import android.content.ServiceConnection;
 import android.content.*;
@@ -43,13 +39,15 @@ import android.os.SystemClock;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+
+// TODO: View log of stored data, export them
+// TODO: Fetch settings data from server
+// TODO: Activity to list more alternatives
+// TODO: Possibility to type in observations
+// TODO: Photo
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -63,29 +61,18 @@ public class MainActivity extends Activity {
 	private String errorfile="errors.dat";
 	private String project;
     private final ShowTimeRunner myTimerThread = new ShowTimeRunner();
-	/** Called when the activity is first created. */
     private static final int RESULT_SETTINGS = 1;
+    private static final int APILEVEL= Build.VERSION.SDK_INT;
     private String uuid;
     private String username;
     private int timeout=10;
-    // Messenger lService = null;
-    //private final String uuid="txt";
-
-
-
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	//	setContentView(R.layout.activity_main);
-	
 		uuid=Installation.id(getApplicationContext());
-		//  Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
-        setContentView(R.layout.main);
-		
+	    setContentView(R.layout.main);
 		ActionBar actionBar = getActionBar();
-		// add the custom view to the action bar
         assert actionBar != null;
         actionBar.setCustomView(R.layout.actionbar);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
@@ -141,7 +128,8 @@ public class MainActivity extends Activity {
 	
 	
 	protected void  stopGPS(){
-		unbindService(lServiceConnection);
+        // TODO: see if it is possible to turn of GPS immediately
+        unbindService(lServiceConnection);
 		lServiceBound=false;
 	}
 	
@@ -213,9 +201,12 @@ public class MainActivity extends Activity {
 				saveObs();	
 				break;
 			case R.id.menu_togglegps:
-			//	Toast.makeText(getApplicationContext(),"toggler 1",Toast.LENGTH_SHORT).show();
-				toggleGPS();	
+			    toggleGPS();
 				break;
+            case R.id.menu_testlist:
+                Intent myIntent = new Intent(getApplicationContext(), itemList.class);
+                startActivityForResult(myIntent, 0);
+                break;
 
         }
 
@@ -224,9 +215,7 @@ public class MainActivity extends Activity {
 
 	
 	public void toggleGPS(){
-	//	Toast.makeText(getApplicationContext(),"Toggler",Toast.LENGTH_SHORT).show();
-		
-		if(lServiceBound){	
+		if(lServiceBound){
 			Toast.makeText(getApplicationContext(),getResources().getString( R.string.stopping_gps),Toast.LENGTH_SHORT).show();
 			stopGPS();
 		}else{
@@ -238,10 +227,9 @@ public class MainActivity extends Activity {
 	
 	
 	public void saveObs(){
-		/* Reading saved observations and reupload those that are not uploaded 
-		   Rewrite file if changes*/
-	//	Toast.makeText(getApplicationContext(),urlString+" ",Toast.LENGTH_SHORT).show();
-		ArrayList<String> linelist = new ArrayList<>();
+		/* Reading log of observations and reupload those that are not uploaded
+		*/
+			ArrayList<String> linelist = new ArrayList<>();
 		try{
 			InputStream is=openFileInput(errorfile);
 			BufferedReader rdr =new BufferedReader(new InputStreamReader(is));
@@ -289,18 +277,9 @@ public class MainActivity extends Activity {
         paramset.put("undo","undo");
         paramset.put("uuid",uuid);
         Date moment = new Date();
-        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
-		paramset.put("ts",ts.toString());
-       	//String params=hashMapToString(paramset);
-        /* String params="";
-        for(Map.Entry<String, String> entry : paramset.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (!(params.equals(""))) params = params + "&";
-            params=params+key+"="+value;
-        }*/
-        try{
-			//URL url = new URL(urlString+"?"+params);
+        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+Z").format(moment);
+		paramset.put("ts",ts);
+       	try{
 			new PostObservation().execute(paramset);
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
@@ -339,32 +318,29 @@ public class MainActivity extends Activity {
 
 	public void saveAct(View v)
 	{
-	
-		//Toast.makeText(getApplicationContext(), urlString, Toast.LENGTH_LONG).show();
-		Button btn=(Button)findViewById(R.id.btnConfirm);
+	    Button btn=(Button)findViewById(R.id.btnConfirm);
 		btn.setEnabled(false);
 		btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(true);
-		myTimerThread.resetTime();
+	//	myTimerThread.resetTime();
 		Date moment = new Date();
         String params="";
 		HashMap<String, String> paramset = new HashMap<String, String>();
 		try{
             if(lServiceBound){
                 Location loc=lService.getLocation();
-				Double age =(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;
+                Double age=0.0;
+				if (APILEVEL > 16){  age=(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;}
 				if(age/60>5){
 				   throw new Exception("Stale gps");
 			  	}
-			//	Toast.makeText(getApplicationContext(),loc.toString(),Toast.LENGTH_SHORT).show();
 				paramset.put("age",age.toString());
 				paramset.put("lat",String.valueOf(loc.getLatitude()));
 				paramset.put("lon",String.valueOf(loc.getLongitude()));
 				paramset.put("alt",String.valueOf(loc.getAltitude()));
 				paramset.put("acc",String.valueOf(loc.getAccuracy()));
 				paramset.put("gpstime",String.valueOf(loc.getTime()));
-				//params="&lat="+String.valueOf(loc.getLatitude())+"&lon="+String.valueOf(loc.getLongitude())+"&alt="+String.valueOf(loc.getAltitude())+"&acc="+String.valueOf(loc.getAccuracy())+"&gpstime="+String.valueOf(loc.getTime());
-            }else{
+	        }else{
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSServiceNotAvailable),Toast.LENGTH_SHORT).show();
             }
         }catch(Exception e){
@@ -389,10 +365,7 @@ public class MainActivity extends Activity {
                 if (!(params.equals(""))) params = params + "&";
                 params=params+key+"="+value;
             }
-
-			//params="drop="+drop+"&ts="+ts+"&drag="+drag+"&uuid="+uuid+"&username="+username+"&project="+project+params;
-		    // URL url = new URL(urlString+"?"+params);
-		    new PostObservation().execute(paramset);
+    	    new PostObservation().execute(paramset);
 		} catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
@@ -455,7 +428,7 @@ public class MainActivity extends Activity {
 	class MyDragListener implements OnDragListener {
 		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
-		@Override
+	    @Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
 			switch (action) {
@@ -470,7 +443,8 @@ public class MainActivity extends Activity {
 				case DragEvent.ACTION_DROP:
 						break;
 				case DragEvent.ACTION_DRAG_ENDED:
-					v.setBackground(normalShape);
+                    if (APILEVEL>=16) v.setBackground(normalShape);
+
 				default:
 					break;
 			}
@@ -489,7 +463,7 @@ public class MainActivity extends Activity {
 		final Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
-		@Override
+	   @Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
 			switch (action) {
@@ -497,10 +471,10 @@ public class MainActivity extends Activity {
 					// do nothing
 					break;
 				case DragEvent.ACTION_DRAG_ENTERED:
-					v.setBackground(enterShape);
+                    if (APILEVEL>15)  v.setBackground(enterShape);
 					break;
 				case DragEvent.ACTION_DRAG_EXITED:
-					v.setBackground(normalShape);
+                    if (APILEVEL>15)  v.setBackground(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
 					// Dropped, reassign View to ViewGroup
@@ -510,7 +484,6 @@ public class MainActivity extends Activity {
 					String t=tv.getText().toString();
 					Object sv = ((ViewGroup)v).getChildAt(0);
 					String st = ((TextView)sv).getText().toString();	
-				//	Toast.makeText(getApplicationContext()," Dragged "+t+" to "+st, Toast.LENGTH_SHORT).show();
 					TextView txtLast = (TextView)findViewById(R.id.tvLastObsType);
 					String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
 					Button bt=(Button)findViewById(R.id.btnConfirm);
@@ -520,7 +493,7 @@ public class MainActivity extends Activity {
 					txtLast.setText(otime+": "+t+" "+st);
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
-					v.setBackground(normalShape);
+                    if (APILEVEL>15) v.setBackground(normalShape);
 				default:
 					break;
 			}
@@ -602,7 +575,7 @@ public class MainActivity extends Activity {
                 HashMap<String,String> paramset = new HashMap<String, String>();
                 paramset=paramsets[0];
                 String params=paramset.get("parameters");
-               if(params == null) {
+                if(params == null) {
                     params="";
                     for (Map.Entry<String, String> entry : paramset.entrySet()) {
                         String key = entry.getKey();
@@ -612,6 +585,7 @@ public class MainActivity extends Activity {
                     }
                 }
                 try{
+                // TODO: Rewrite to use post / json
                     URL url = new URL(urlString+"?"+params);
                     URLConnection conn = url.openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
