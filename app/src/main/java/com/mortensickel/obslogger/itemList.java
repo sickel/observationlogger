@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 
 /**
@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class itemList extends Activity {
-    List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
+    List<Map<String, String>> obsList = new ArrayList<Map<String, String>>();
     SimpleAdapter simpleAdpt;
 
     @Override
@@ -29,7 +29,7 @@ public class itemList extends Activity {
         setContentView(R.layout.itemlist);
         initList();
         ListView lv = (ListView) findViewById(R.id.listView);
-        simpleAdpt = new SimpleAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1});
+        simpleAdpt = new SimpleAdapter(this, obsList, android.R.layout.simple_list_item_1, new String[]{"observation"}, new int[]{android.R.id.text1});
         lv.setAdapter(simpleAdpt);
         Button next = (Button) findViewById(R.id.ButtonBack);
         next.setOnClickListener(new View.OnClickListener() {
@@ -41,25 +41,24 @@ public class itemList extends Activity {
         });
     }
 
-    private HashMap<String, String> createPlanet(String key, String name) {
-        HashMap<String, String> planet = new HashMap<String, String>();
-        planet.put(key, name);
-        return planet;
+    private HashMap<String, String> createObservation(String key, String name) {
+        HashMap<String, String> observation = new HashMap<String, String>();
+        observation.put(key, name);
+        return observation;
     }
 
-     private void initList() {
+    private void initList() {
+        // TODO: Possible to use a text input as one of the items?
     // We populate the planets
 
-    planetsList.add(createPlanet("planet", "Mercury"));
-    planetsList.add(createPlanet("planet", "Venus"));
-    planetsList.add(createPlanet("planet", "Mars"));
-    planetsList.add(createPlanet("planet", "Jupiter"));
-    planetsList.add(createPlanet("planet", "Saturn"));
-    planetsList.add(createPlanet("planet", "Uranus"));
-    planetsList.add(createPlanet("planet", "Neptune"));
+        obsList.add(createObservation("observation", "Drinking"));
+        obsList.add(createObservation("observation", "Fighting"));
+        obsList.add(createObservation("observation", "Dancing"));
+        obsList.add(createObservation("observation", "Singing"));
+        obsList.add(createObservation("observation", "Climbing"));
+        obsList.add(createObservation("observation", "?????"));
 
-
-}
+    }
 
 
 }
