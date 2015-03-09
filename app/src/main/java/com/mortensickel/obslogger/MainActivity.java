@@ -76,9 +76,9 @@ public class MainActivity extends Activity {
     private static final int RESULT_SETTINGS = 1;
     private static final int APILEVEL= Build.VERSION.SDK_INT;
     private String uuid;
-    private String username;
+    private String username, freetext;
     private int timeout=10;
-
+	private static final int ACTIVITY_ITEMLIST=0;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -167,21 +167,58 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+/*		freetext="";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
             if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
             if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
+				//	Toast.makeText(getApplicationContext(),extras.getString("freetext"),Toast.LENGTH_SHORT).show();
             Button bt = (Button) findViewById(R.id.btnConfirm);
             bt.setEnabled(true);
             myTimerThread.resetTime();
-        }
+        }*/
         showStatus(lnum.toString());
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
         txtLast.setText(lasttimestamp + ": " + lastdrag + " " + lastdrop);
 
     }
+public void debug(String t){
+	Toast.makeText(getApplicationContext(),t,Toast.LENGTH_SHORT).show();
+	
+}
 
+	public void debug(Integer i){
+		Toast.makeText(getApplicationContext(),i.toString(),Toast.LENGTH_SHORT).show();
+
+	}
+
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent i) {     
+		super.onActivityResult(requestCode, resultCode, i); 
+	//	debug(requestCode);
+		switch(requestCode) { 
+			case (ACTIVITY_ITEMLIST) : { 
+				if (resultCode == Activity.RESULT_OK) { 
+						Bundle extras = i.getExtras();
+						
+						if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
+						if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
+						if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
+						if (extras.getString("freetext") != null) freetext = extras.getString("freetext");	
+						Button bt = (Button) findViewById(R.id.btnConfirm);
+						bt.setEnabled(true);
+						myTimerThread.resetTime();
+					
+					
+				//	String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
+						// TODO Update your TextView.
+					} 
+					break; 
+				} 
+		} 
+	}
+	
     public void setZones(ViewGroup ll, String names){
        // rewrite to objects to avoid the if
         List<String> zoneNames= Arrays.asList(names.split("\\s*,\\s*"));
@@ -378,7 +415,6 @@ public class MainActivity extends Activity {
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
         lastdrag = drag;
         String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
-
 		try{
 			paramset.put("drop",drop);
             paramset.put("ts", ts);
@@ -386,6 +422,8 @@ public class MainActivity extends Activity {
 			paramset.put("uuid",uuid);
 			paramset.put("username",username);
 			paramset.put("project",project);
+			paramset.put("freetext",freetext);
+	
             params="";
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
                 String key = entry.getKey();
@@ -397,6 +435,7 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
+		freetext="";
 		try{
 
 		    FileOutputStream outputStream;

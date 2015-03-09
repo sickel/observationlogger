@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.widget.*;
 
 /**
  * Created by morten on 3/8/15.
@@ -42,8 +43,14 @@ public class itemList extends Activity {
         Button next = (Button) findViewById(R.id.ButtonBack);
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
-                startActivityForResult(myIntent, 0);
+                Intent i = new Intent(view.getContext(), MainActivity.class);
+              	EditText et=(EditText)findViewById(R.id.observationText);
+				i.putExtra("freetext",et.getText().toString());
+				i.putExtra("lastdrag", lastdrag);
+                i.putExtra("lasttime", lasttimestamp);
+			//	Toast.makeText(getApplicationContext(),et.getText(),Toast.LENGTH_SHORT).show();
+				setResult(Activity.RESULT_OK,i);
+				finish();
             }
             // TODO: Return data to mainactivity
             // TODO: Must indicate i selected (to be shown in "Last observation") or free text
@@ -61,7 +68,8 @@ public class itemList extends Activity {
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
         //String altlist=sharedPrefs.getString("altList", );
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-        for (String obs : observations) {
+        // TODO remove exising before adding...
+		for (String obs : observations) {
             obsList.add(createObservation("observation", obs));
         }
         // initList();
@@ -83,8 +91,13 @@ public class itemList extends Activity {
                 i.putExtra("lastdrop", clickedView.getText());
                 i.putExtra("lastdrag", lastdrag);
                 i.putExtra("lasttime", lasttimestamp);
-                // possible to resume activity?
-                startActivity(i);
+				EditText et=(EditText)findViewById(R.id.observationText);
+				i.putExtra("freetext",et.getText().toString());
+       		    setResult(Activity.RESULT_OK,i);
+				finish();
+			
+				// possible to resume activity?
+              //  startActivity(i);
                 // MainActivity.setLastdrop(clickedView.getText());
 
             }
@@ -97,16 +110,6 @@ public class itemList extends Activity {
         observation.put(key, name);
         return observation;
     }
-
-   /* private void initList() {
-        // TODO Read from settings
-        obsList.add(createObservation("observation", "Fighting"));
-        obsList.add(createObservation("observation", "Dancing"));
-        obsList.add(createObservation("observation", "Singing"));
-        obsList.add(createObservation("observation", "Climbing"));
-        obsList.add(createObservation("observation", "?????"));
-
-    } */
 
 
 }

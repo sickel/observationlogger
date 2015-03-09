@@ -51,8 +51,23 @@ public class LocationService extends Service implements LocationListener {
 
     }
 
+	@Override
+	public boolean onUnbind(Intent intent)
+	{
+		// TODO: Implement this method
+		return super.onUnbind(intent);
+	}
+
+	@Override
+	public void onUnbind(){
+	
+		
+	}
+	
+	
+	
     @Override
-    public IBinder onBind(final Intent intent) {
+    public IBinder onBind(final Intent   intent) {
         return mBinder;
     }
 
