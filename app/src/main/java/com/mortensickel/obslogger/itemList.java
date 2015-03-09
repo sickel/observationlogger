@@ -52,7 +52,7 @@ public class itemList extends Activity {
 				setResult(Activity.RESULT_OK,i);
 				finish();
             }
-            // TODO: Return data to mainactivity
+
             // TODO: Must indicate i selected (to be shown in "Last observation") or free text
             // TODO: Freetext should be indicated to exist in "Last observation", but not quoted
             // TODO: Maybe first 10-15 letters in Freetext and ...
@@ -68,9 +68,10 @@ public class itemList extends Activity {
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
         //String altlist=sharedPrefs.getString("altList", );
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-        // TODO remove exising before adding...
-		for (String obs : observations) {
-            obsList.add(createObservation("observation", obs));
+
+        obsList.clear();
+        for (String obs : observations) {
+		    obsList.add(createObservation("observation", obs));
         }
         // initList();
         ListView lv = (ListView) findViewById(R.id.listView);

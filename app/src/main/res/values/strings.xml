@@ -35,7 +35,7 @@
     <string name="pref_use_sec_values_summ">Comma separated list</string>
     <string name="secnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
     <string name="dropnames">Grazing,Resting,Walking,Other</string>
-    <string name="dragnames" translatable="false">240,242,244,245,260</string>
+    <string name="dragnames">240,242,244,245,260</string>
     <string name="menu_upload">Upload data</string>
 	<string name="menu_togglegps">Toggle GPS</string>
 	<string name="starting_gps">Starting GPSservice</string>
@@ -44,5 +44,4 @@
     <string name="GPSServiceNotAvailable">GPS service still not available</string>
     <string name="GPSLocationNotAvailable">GPS location not available</string>
     <string name="setsNotUploaded">sets not uploaded</string>
-    <string name="menu_testlist">List - testing</string>
 </resources>

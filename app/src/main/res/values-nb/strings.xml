@@ -12,7 +12,7 @@
     <string name="menu_upload">Last opp data</string>
     <string name="miscSettings">Forskjellig</string>
     <string name="noDataFound">Alle data er lastet opp</string>
-    <string name="pref_drag_names"></string>
+    <string name="pref_drag_names">Navn på dra-felter (nederst)</string>
     <string name="undo">Angre</string>
     <string name="upload">Last opp data til serveren</string>
     <string name="uploadurl">URL for opplasting</string>
@@ -22,10 +22,23 @@
     <string name="pref_user_name_summary">brukt i opplasting</string>
     <string name="stopping_gps">Stopper GPSen</string>
     <string name="starting_gps">Starter GPSen</string>
-    <string name="pref_use_sec_values_summ"></string>
+    <string name="pref_use_sec_values_summ">Kommaseparert liste</string>
     <string name="pref_use_sec_values">Bruk alternative verdier</string>
     <string name="pref_project_name">Prosjektnavn</string>
     <string name="pref_other_names_summary">Andre verdier</string>
     <string name="pref_other_names">Annet</string>
     <string name="pref_drop_names_summary">Kommaseparert liste</string>
+    <string name="pref_drag_names_summary">Kommaseparert liste</string>
+    <string name="pref_drop_names">Navn på slipp-felter (øverst)</string>
+    <string name="pref_project_name_summary">Prosjektnavn - brukt i opplasting</string>
+    <string name="pref_sec_values">Alternative verdier</string>
+    <string name="pref_sec_values_summary">Kommaseparert liste</string>
+    <string name="pref_timeout">Tidsavbrudd</string>
+    <string name="pref_timeout_summary">Bekreft eller angre</string>
+    <string name="secnames">Drikker, Sloss</string>
+    <string name="setsNotUploaded">sett er ikke lastet opp</string>
+    <string name="uploaddata">Opplasting</string>
+    <string name="valueSettings">Sett loggeverdier</string>
+    <string name="valueSettings_summary">Sett loggeverdier</string>
+    <string name="dragnames">240,242,244,245,260</string>
 </resources>
