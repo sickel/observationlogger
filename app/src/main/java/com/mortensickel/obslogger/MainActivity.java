@@ -196,6 +196,7 @@ public void debug(String t){
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {     
 		super.onActivityResult(requestCode, resultCode, i); 
 	//	debug(requestCode);
+	// TODO indicate existing freetext
 		switch(requestCode) { 
 			case (ACTIVITY_ITEMLIST) : { 
 				if (resultCode == Activity.RESULT_OK) { 
@@ -208,10 +209,6 @@ public void debug(String t){
 						Button bt = (Button) findViewById(R.id.btnConfirm);
 						bt.setEnabled(true);
 						myTimerThread.resetTime();
-					
-					
-				//	String newText = data.getStringExtra(PUBLIC_STATIC_STRING_IDENTIFIER);
-						// TODO Update your TextView.
 					} 
 					break; 
 				} 
