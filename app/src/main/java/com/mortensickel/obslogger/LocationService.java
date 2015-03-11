@@ -58,11 +58,6 @@ public class LocationService extends Service implements LocationListener {
 		return super.onUnbind(intent);
 	}
 
-	@Override
-	public void onUnbind(){
-	
-		
-	}
 	
 	
 	

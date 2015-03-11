@@ -35,10 +35,11 @@
     <string name="pref_sec_values_summary">Kommaseparert liste</string>
     <string name="pref_timeout">Tidsavbrudd</string>
     <string name="pref_timeout_summary">Bekreft eller angre</string>
-    <string name="secnames">Drikker, Sloss</string>
     <string name="setsNotUploaded">sett er ikke lastet opp</string>
     <string name="uploaddata">Opplasting</string>
     <string name="valueSettings">Sett loggeverdier</string>
     <string name="valueSettings_summary">Sett loggeverdier</string>
     <string name="dragnames">240,242,244,245,260</string>
+    <string name="secnames"></string>
+    <string name="altnames">Drikker, Sloss</string>
 </resources>

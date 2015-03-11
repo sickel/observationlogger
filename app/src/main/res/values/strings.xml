@@ -33,7 +33,6 @@
     <string name="valueSettings_summary">Set values to log</string>
     <string name="pref_use_sec_values">Use secondary values</string>
     <string name="pref_use_sec_values_summ">Comma separated list</string>
-    <string name="secnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
     <string name="dropnames">Grazing,Resting,Walking,Other</string>
     <string name="dragnames">240,242,244,245,260</string>
     <string name="menu_upload">Upload data</string>
@@ -44,4 +43,5 @@
     <string name="GPSServiceNotAvailable">GPS service still not available</string>
     <string name="GPSLocationNotAvailable">GPS location not available</string>
     <string name="setsNotUploaded">sets not uploaded</string>
+    <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
 </resources>

@@ -64,9 +64,7 @@ public class itemList extends Activity {
     public void onResume() {
         super.onResume();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //String defaultlist=
-        String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
-        //String altlist=sharedPrefs.getString("altList", );
+        String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.altnames));
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
 
         obsList.clear();
@@ -80,14 +78,8 @@ public class itemList extends Activity {
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
-                                    long id) {
-
-
-                // We know the View is a TextView so we can cast it
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position,long id) {
                 TextView clickedView = (TextView) view;
-
-                //        Toast.makeText(getApplicationContext(), "Item with id [" + id + "] - Position [" + position + "] - [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(view.getContext(), MainActivity.class);
                 i.putExtra("lastdrop", clickedView.getText());
                 i.putExtra("lastdrag", lastdrag);
@@ -96,11 +88,6 @@ public class itemList extends Activity {
 				i.putExtra("freetext",et.getText().toString());
        		    setResult(Activity.RESULT_OK,i);
 				finish();
-			
-				// possible to resume activity?
-              //  startActivity(i);
-                // MainActivity.setLastdrop(clickedView.getText());
-
             }
         });
         // See more at: http://www.survivingwithandroid.com/2012/09/listviewpart-1.html#sthash.vZYbPB7J.dpuf
