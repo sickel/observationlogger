@@ -66,12 +66,18 @@ public class itemList extends Activity {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.altnames));
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-
+		// TODO add standard dropfields
         obsList.clear();
         for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
+		altlist = sharedPrefs.getString("dropnames", getResources().getString(R.string.dropnames));
+        //String altlist=sharedPrefs.getString("altList", );
+        observations = Arrays.asList(altlist.split("\\s*,\\s*"));
         // initList();
+		for (String obs : observations) {
+		    obsList.add(createObservation("observation", obs));
+        }
         ListView lv = (ListView) findViewById(R.id.listView);
         simpleAdpt = new SimpleAdapter(this, obsList, android.R.layout.simple_list_item_1, new String[]{"observation"}, new int[]{android.R.id.text1});
         lv.setAdapter(simpleAdpt);

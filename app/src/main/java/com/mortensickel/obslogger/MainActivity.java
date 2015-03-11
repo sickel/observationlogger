@@ -184,6 +184,7 @@ public class MainActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {     
 		super.onActivityResult(requestCode, resultCode, i); 
 	//	debug(requestCode);
+	// TODO indicate existing freetext
 		switch(requestCode) { 
 			case (ACTIVITY_ITEMLIST) : { 
 				if (resultCode == Activity.RESULT_OK) { 
