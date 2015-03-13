@@ -94,7 +94,8 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
-
+		TextView ft=(TextView)findViewById(R.id.acbar_freetext);
+		ft.setText("");
 	}
 
 
@@ -193,7 +194,11 @@ public class MainActivity extends Activity {
 						if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
 						if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
 						if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
-						if (extras.getString("freetext") != null) freetext = extras.getString("freetext");	
+						if (extras.getString("freetext") != null){
+							freetext = extras.getString("freetext");
+							TextView ft=(TextView)findViewById(R.id.acbar_freetext);
+							ft.setText(freetext);
+						}
 						Button bt = (Button) findViewById(R.id.btnConfirm);
 						bt.setEnabled(true);
 						myTimerThread.resetTime();
@@ -201,6 +206,7 @@ public class MainActivity extends Activity {
 					break; 
 				} 
 		} 
+		
 	}
 	
     public void setZones(ViewGroup ll, String names){
@@ -416,6 +422,8 @@ public class MainActivity extends Activity {
                 params=params+key+"="+value;
             }
     	    new PostObservation().execute(paramset);
+			TextView ft=(TextView)findViewById(R.id.acbar_freetext);
+			ft.setText("");
 		} catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
