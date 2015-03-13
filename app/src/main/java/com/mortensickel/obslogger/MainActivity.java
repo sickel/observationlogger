@@ -56,7 +56,6 @@ import java.net.*;
 
 // TODO: View log of stored data, export them
 // TODO: Fetch settings data from server
-// TODO: Possibility to type in observations
 // TODO: Photo
 
 public class MainActivity extends Activity {
@@ -106,7 +105,7 @@ public class MainActivity extends Activity {
 	protected void onStart(){
 		super.onStart();
 		startGPS();
-		}
+	}
 	
 	protected void startGPS(){
 		
@@ -167,26 +166,15 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-/*		freetext="";
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
-            if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
-            if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
-				//	Toast.makeText(getApplicationContext(),extras.getString("freetext"),Toast.LENGTH_SHORT).show();
-            Button bt = (Button) findViewById(R.id.btnConfirm);
-            bt.setEnabled(true);
-            myTimerThread.resetTime();
-        }*/
         showStatus(lnum.toString());
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
         txtLast.setText(lasttimestamp + ": " + lastdrag + " " + lastdrop);
 
     }
-public void debug(String t){
-	Toast.makeText(getApplicationContext(),t,Toast.LENGTH_SHORT).show();
-	
-}
+
+    public void debug(String t){
+	    Toast.makeText(getApplicationContext(),t,Toast.LENGTH_SHORT).show();
+    }
 
 	public void debug(Integer i){
 		Toast.makeText(getApplicationContext(),i.toString(),Toast.LENGTH_SHORT).show();
@@ -202,7 +190,6 @@ public void debug(String t){
 			case (ACTIVITY_ITEMLIST) : { 
 				if (resultCode == Activity.RESULT_OK) { 
 						Bundle extras = i.getExtras();
-						
 						if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
 						if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
 						if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
@@ -217,7 +204,7 @@ public void debug(String t){
 	}
 	
     public void setZones(ViewGroup ll, String names){
-       // rewrite to objects to avoid the if
+       // rewrite to objects to avoid the if - or maybe not? Is this cleaner although less javaesqe?
         List<String> zoneNames= Arrays.asList(names.split("\\s*,\\s*"));
         ll.removeAllViews();
         for (String zone : zoneNames) {
@@ -297,8 +284,7 @@ public void debug(String t){
 			File dir=getFilesDir();
 			File from = new File(dir,errorfile);
 			File to = new File(dir,errorfile+".bak");
-			if(from.exists())
-				from.renameTo(to);
+			if(from.exists()) if(!(from.renameTo(to))) debug("Could not rename");
 		}catch(Exception e){
 			Toast.makeText(getApplicationContext(),getResources().getString(R.string.noDataFound),Toast.LENGTH_SHORT).show();
 		}
@@ -386,7 +372,12 @@ public void debug(String t){
             if(lServiceBound){
                 Location loc=lService.getLocation();
                 Double age=0.0;
-				if (APILEVEL > 16){  age=(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;}
+				if (APILEVEL > 16){
+                    age=(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;
+                }else{
+                    double currentTime = System.currentTimeMillis();
+                    age=(currentTime - loc.getTime())/1000;
+                }
 				if(age/60>5){
 				   throw new Exception("Stale gps");
 			  	}
@@ -685,8 +676,7 @@ public void debug(String t){
 					} catch (Exception fe) {
 						fe.printStackTrace();
 					}
-				//	Toast.makeText(getApplicationContext()," upload error caught", Toast.LENGTH_SHORT).show();
-					
+
 					return null;
 				}
                 status=10;

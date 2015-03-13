@@ -67,7 +67,7 @@ public class itemList extends Activity {
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
        	List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
 		obsList.clear();
-        for (String obs : observations) {
+		 for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
 		altlist = sharedPrefs.getString("dropnames", getResources().getString(R.string.dropnames));
@@ -79,14 +79,10 @@ public class itemList extends Activity {
         simpleAdpt = new SimpleAdapter(this, obsList, android.R.layout.simple_list_item_1, new String[]{"observation"}, new int[]{android.R.id.text1});
         lv.setAdapter(simpleAdpt);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
-                                    long id) {
 
 
-                // We know the View is a TextView so we can cast it
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position,long id) {
                 TextView clickedView = (TextView) view;
-
-                //        Toast.makeText(getApplicationContext(), "Item with id [" + id + "] - Position [" + position + "] - [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(view.getContext(), MainActivity.class);
                 i.putExtra("lastdrop", clickedView.getText());
                 i.putExtra("lastdrag", lastdrag);
