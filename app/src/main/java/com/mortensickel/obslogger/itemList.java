@@ -63,29 +63,22 @@ public class itemList extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //String defaultlist=
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this); 
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.dragnames));
-        //String altlist=sharedPrefs.getString("altList", );
-        List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-		// TODO add standard dropfields
-        obsList.clear();
+       	List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
+		obsList.clear();
         for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
 		altlist = sharedPrefs.getString("dropnames", getResources().getString(R.string.dropnames));
-        //String altlist=sharedPrefs.getString("altList", );
         observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-        // initList();
-		for (String obs : observations) {
+      	for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
         ListView lv = (ListView) findViewById(R.id.listView);
         simpleAdpt = new SimpleAdapter(this, obsList, android.R.layout.simple_list_item_1, new String[]{"observation"}, new int[]{android.R.id.text1});
         lv.setAdapter(simpleAdpt);
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
 
@@ -102,11 +95,6 @@ public class itemList extends Activity {
 				i.putExtra("freetext",et.getText().toString());
        		    setResult(Activity.RESULT_OK,i);
 				finish();
-			
-				// possible to resume activity?
-              //  startActivity(i);
-                // MainActivity.setLastdrop(clickedView.getText());
-
             }
         });
         // See more at: http://www.survivingwithandroid.com/2012/09/listviewpart-1.html#sthash.vZYbPB7J.dpuf

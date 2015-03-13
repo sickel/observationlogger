@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.net.*;
 
 
 // TODO: View log of stored data, export them
@@ -406,15 +407,15 @@ public void debug(String t){
         lastdrop = drop;
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
         lastdrag = drag;
-        String ts=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss").format(moment);
+        String ts=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(moment);
 		try{
-			paramset.put("drop",drop);
-            paramset.put("ts", ts);
-            paramset.put("drag",drag);
+			paramset.put("drop",URLEncoder.encode(drop));
+            paramset.put("ts", URLEncoder.encode( ts));
+            paramset.put("drag",URLEncoder.encode(drag));
 			paramset.put("uuid",uuid);
-			paramset.put("username",username);
-			paramset.put("project",project);
-			paramset.put("freetext",freetext);
+			paramset.put("username",URLEncoder.encode( username));
+			paramset.put("project",URLEncoder.encode(project));
+			paramset.put("freetext",URLEncoder.encode(freetext));
 	
             params="";
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
@@ -659,7 +660,9 @@ public void debug(String t){
                 }
                 try{
                 // TODO: Rewrite to use post / json
-                    URL url = new URL(urlString+"?"+params);
+                   // params=URLEncoder.encode(params,"UTF-8");
+					URL url = new URL(urlString+"?"+params);
+					
                     URLConnection conn = url.openConnection();
 					BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
 					String inputLine;
