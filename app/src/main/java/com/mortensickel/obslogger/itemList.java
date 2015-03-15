@@ -53,8 +53,7 @@ public class itemList extends Activity {
 				finish();
             }
 
-            // TODO: Must indicate i selected (to be shown in "Last observation") or free text
-            // TODO: Freetext should be indicated to exist in "Last observation", but not quoted
+           // TODO: Freetext should be indicated to exist in "Last observation", but not quoted
             // TODO: Maybe first 10-15 letters in Freetext and ...
             // TODO: Remember that data are picked up from last observation - maybe time for a change
         });
@@ -66,16 +65,13 @@ public class itemList extends Activity {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String altlist = sharedPrefs.getString("secValues", getResources().getString(R.string.altnames));
         List<String> observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-		// TODO add standard dropfields
-        obsList.clear();
+	    obsList.clear();
         for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
 		altlist = sharedPrefs.getString("dropnames", getResources().getString(R.string.dropnames));
-        //String altlist=sharedPrefs.getString("altList", );
         observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-        // initList();
-		for (String obs : observations) {
+       	for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
         ListView lv = (ListView) findViewById(R.id.listView);

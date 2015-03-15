@@ -20,10 +20,10 @@
             android:id="@+id/observationText" />       <Button
             android:text="OK"
         android:id="@+id/ButtonBack"
-            android:layout_width="0dp"
+            android:layout_width="0sp"
            android:layout_weight="1"
-			android:textSize="18dp"
-            android:layout_height="55dp"></Button>
+			android:textSize="18sp"
+            android:layout_height="55sp"></Button>
 
         
 	</LinearLayout>

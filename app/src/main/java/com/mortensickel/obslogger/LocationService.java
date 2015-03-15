@@ -54,7 +54,6 @@ public class LocationService extends Service implements LocationListener {
 	@Override
 	public boolean onUnbind(Intent intent)
 	{
-		// TODO: Implement this method
 		return super.onUnbind(intent);
 	}
 
@@ -68,8 +67,7 @@ public class LocationService extends Service implements LocationListener {
 
     public void onLocationChanged(final Location location) {
         this.location = location;   
-        // TODO this is where you'd do something like context.sendBroadcast()
-        Log.i(LOGTAG,location.toString());
+     //   Log.i(LOGTAG,location.toString());
 
     }
 
