@@ -71,14 +71,14 @@ public class itemList extends Activity {
         }
 		altlist = sharedPrefs.getString("dropnames", getResources().getString(R.string.dropnames));
         observations = Arrays.asList(altlist.split("\\s*,\\s*"));
-       	for (String obs : observations) {
+      	for (String obs : observations) {
 		    obsList.add(createObservation("observation", obs));
         }
         ListView lv = (ListView) findViewById(R.id.listView);
         simpleAdpt = new SimpleAdapter(this, obsList, android.R.layout.simple_list_item_1, new String[]{"observation"}, new int[]{android.R.id.text1});
         lv.setAdapter(simpleAdpt);
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,long id) {
                 TextView clickedView = (TextView) view;
