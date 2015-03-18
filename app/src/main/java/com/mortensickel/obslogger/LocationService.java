@@ -55,6 +55,8 @@ public class LocationService extends Service implements LocationListener {
 	public boolean onUnbind(Intent intent)
 	{
 		// TODO: Implement this method
+		locationManager.removeUpdates(this);
+		locationManager=null;
 		return super.onUnbind(intent);
 	}
 

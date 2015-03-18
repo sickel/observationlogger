@@ -17,7 +17,7 @@
     <string name="upload">Last opp data til serveren</string>
     <string name="uploadurl">URL for opplasting</string>
     <string name="useGPS">Bruk GPS</string>
-    <string name="waittime">Tid siden siste observasjon</string>
+    <string name="waittime">Tid siden siste observasjon : </string>
     <string name="pref_user_name">Brukernavn</string>
     <string name="pref_user_name_summary">brukt i opplasting</string>
     <string name="stopping_gps">Stopper GPSen</string>

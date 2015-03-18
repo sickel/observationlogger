@@ -54,13 +54,13 @@ import java.util.Map;
 import java.net.*;
 
 
-// TODO: View log of stored data, export them
+// TODO: View log of stored data, export them to email
 // TODO: Fetch settings data from server
 // TODO: Photo
 
 public class MainActivity extends Activity {
-	LocationService lService;
-
+	LocationService lService; 
+	private static final String dateformat="yyyy-MM-dd HH:mm:ss+z";
     private static String LOGTAG="Obslogger";
     private String lastdrag = "";
     private String lastdrop = "";
@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
     private static final int RESULT_SETTINGS = 1;
     private static final int APILEVEL= Build.VERSION.SDK_INT;
     private String uuid;
-    private String username, freetext;
+    private String username, freetext="";
     private int timeout=10;
 	private static final int ACTIVITY_ITEMLIST=0;
 	@Override
@@ -133,10 +133,11 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onStop(){
-		super.onStop();
 		if(lServiceBound){		
 			stopGPS();
 		}
+		super.onStop();
+	
 	}
 	
 	
@@ -255,6 +256,9 @@ public class MainActivity extends Activity {
 			case R.id.menu_togglegps:
 			    toggleGPS();
 				break;
+			case R.id.menu_cleardata:
+				// delete logfile an errorfile
+				break;
 
 
         }
@@ -325,8 +329,8 @@ public class MainActivity extends Activity {
         paramset.put("undo","undo");
         paramset.put("uuid",uuid);
         Date moment = new Date();
-        String ts = new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z").format(moment);
-        paramset.put("ts",ts);
+        String ts = new SimpleDateFormat(dateformat).format(moment);
+        paramset.put("ts",URLEncoder.encode(ts));
        	try{
 			new PostObservation().execute(paramset);
 		} catch (Exception e) {
@@ -404,16 +408,19 @@ public class MainActivity extends Activity {
         lastdrop = drop;
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
         lastdrag = drag;
-        String ts=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(moment);
+        String ts=new SimpleDateFormat(dateformat).format(moment);
 		try{
+		//	debug("here");
 			paramset.put("drop",URLEncoder.encode(drop));
             paramset.put("ts", URLEncoder.encode( ts));
             paramset.put("drag",URLEncoder.encode(drag));
 			paramset.put("uuid",uuid);
+		//	debug("there");
 			paramset.put("username",URLEncoder.encode( username));
 			paramset.put("project",URLEncoder.encode(project));
 			paramset.put("freetext",URLEncoder.encode(freetext));
-	
+			
+			
             params="";
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
                 String key = entry.getKey();
@@ -421,7 +428,7 @@ public class MainActivity extends Activity {
                 if (!(params.equals(""))) params = params + "&";
                 params=params+key+"="+value;
             }
-    	    new PostObservation().execute(paramset);
+			 new PostObservation().execute(paramset);
 			TextView ft=(TextView)findViewById(R.id.acbar_freetext);
 			ft.setText("");
 		} catch (Exception e) {
@@ -583,6 +590,10 @@ public class MainActivity extends Activity {
 			runOnUiThread(new Runnable(){
 					public void run(){
 						try{
+							TextView status=(TextView)findViewById(R.id.tvLastObsType);
+							// should npt show time if there are no.observation
+							if(status.getText().length()<5) return;
+							
 							TextView txtTimer = (TextView)findViewById(R.id.tvWaitTime);
 							Date dt= new Date();
 							long sec=dt.getTime();

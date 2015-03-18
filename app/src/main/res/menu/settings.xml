@@ -10,4 +10,7 @@
     <item
         android:id="@+id/menu_togglegps"
         android:title="@string/menu_togglegps" />
+	<item
+		android:id="@+id/menu_cleardata"
+		android:title="@string/menu_clear"/>
 </menu>
