@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
         }
         showStatus(lnum.toString());
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
-        txtLast.setText(lasttimestamp + ": " + lastdrag + " " + lastdrop);
+        txtLast.setText(lasttimestamp + " : " + lastdrag + " " + lastdrop);
 
     }
 
@@ -403,17 +403,12 @@ public class MainActivity extends Activity {
         }catch(Exception e){
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSLocationNotAvailable),Toast.LENGTH_LONG);
         }
-        String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
-		String drop=tv.substring(tv.lastIndexOf(" ")+1);
-        lastdrop = drop;
-        String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
-        lastdrag = drag;
         String ts=new SimpleDateFormat(dateformat).format(moment);
 		try{
 		//	debug("here");
-			paramset.put("drop",URLEncoder.encode(drop));
+			paramset.put("drop",URLEncoder.encode(lastdrop));
             paramset.put("ts", URLEncoder.encode( ts));
-            paramset.put("drag",URLEncoder.encode(drag));
+            paramset.put("drag",URLEncoder.encode(lastdrag));
 			paramset.put("uuid",uuid);
 		//	debug("there");
 			paramset.put("username",URLEncoder.encode( username));
@@ -452,7 +447,7 @@ public class MainActivity extends Activity {
 		String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
         lasttimestamp = otime;
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
-        txtLast.setText(otime + ": " + drag + " " + drop);
+        txtLast.setText(otime + ": " + lastdrag + " " + lastdrop);
         Integer lnum=0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -551,26 +546,25 @@ public class MainActivity extends Activity {
                     Date moment = new Date();
                     LinearLayout ll = (LinearLayout) v.getParent();
                     Integer n = ll.getChildCount();
-                    String st = "";
-
+					lastdrop="";
                     TextView tv = (TextView) event.getLocalState();
-                    String t = tv.getText().toString();
+                    lastdrag = tv.getText().toString();
                     TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
                     String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
                     if (ll.getChildAt(n - 1) == v) {
                         Intent i = new Intent(getApplicationContext(), itemList.class);
-                        i.putExtra("lastdrag", t);
+                        i.putExtra("lastdrag", lastdrag);
                         i.putExtra("lasttime", otime);
                         startActivityForResult(i, 0);
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
-                        st = ((TextView) sv).getText().toString();
+                        lastdrop = ((TextView) sv).getText().toString();
                     }
                     Button bt = (Button) findViewById(R.id.btnConfirm);
                     bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
 					bt.setEnabled(false);
-					txtLast.setText(otime+": "+t+" "+st);
+					txtLast.setText(otime+": "+lastdrag+" "+lastdrop);
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
                     if (APILEVEL>15) v.setBackground(normalShape);
@@ -591,7 +585,7 @@ public class MainActivity extends Activity {
 					public void run(){
 						try{
 							TextView status=(TextView)findViewById(R.id.tvLastObsType);
-							// should npt show time if there are no.observation
+							// should not show time if there are no.observation
 							if(status.getText().length()<5) return;
 							
 							TextView txtTimer = (TextView)findViewById(R.id.tvWaitTime);
