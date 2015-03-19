@@ -32,9 +32,9 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import com.mortensickel.obslogger.LocationService.LocalBinder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.net.*;
-
+import org.json.*;
 
 // TODO: View log of stored data, export them to email
 // TODO: Fetch settings data from server
@@ -78,6 +78,8 @@ public class MainActivity extends Activity {
     private String username, freetext="";
     private int timeout=10;
 	private static final int ACTIVITY_ITEMLIST=0;
+	final Context context = this;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +111,6 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void startGPS(){
-		
 		Intent intent=new Intent(this, LocationService.class);
 		intent.setAction("startListening");
 		startService(intent);
@@ -137,7 +138,6 @@ public class MainActivity extends Activity {
 			stopGPS();
 		}
 		super.onStop();
-	
 	}
 	
 	
@@ -161,7 +161,6 @@ public class MainActivity extends Activity {
         String dropnames=sharedPrefs.getString("dropNames", getResources().getString(R.string.dropnames));
         ll =(ViewGroup)findViewById(R.id.dropzones);
         setZones(ll,dropnames);
-
         Integer lnum = 0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -171,7 +170,6 @@ public class MainActivity extends Activity {
         showStatus(lnum.toString());
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
         txtLast.setText(lasttimestamp + " : " + lastdrag + " " + lastdrop);
-
     }
 
     public void debug(String t){
@@ -257,7 +255,37 @@ public class MainActivity extends Activity {
 			    toggleGPS();
 				break;
 			case R.id.menu_cleardata:
-				// delete logfile an errorfile
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				context);
+ 
+			// set title
+			alertDialogBuilder.setTitle("");
+ 
+			// set dialog message
+			alertDialogBuilder
+				.setMessage(getResources().getString(R.string.dialog_resetfiles))
+				.setCancelable(false)
+				.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						// if this button is clicked, close
+						// current activity
+						MainActivity.this.resetfiles();
+					}
+				  })
+				.setNegativeButton("No",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						// if this button is clicked, just close
+						// the dialog box and do nothing
+						dialog.cancel();
+					}
+				});
+ 
+				// create alert dialog
+				AlertDialog alertDialog = alertDialogBuilder.create();
+ 
+				// show it
+				alertDialog.show();
+				// delete logfile and errorfile
 				break;
 
 
@@ -266,6 +294,26 @@ public class MainActivity extends Activity {
         return true;
     }
 
+	public void resetfiles(){
+		// empties logfiles
+		FileOutputStream outputStream;
+		//	debug("here");
+		try
+		{
+			outputStream = openFileOutput(savefile, getApplicationContext().MODE_PRIVATE);	
+			outputStream.write(("").getBytes());
+			outputStream.close();
+			outputStream = openFileOutput(errorfile, getApplicationContext().MODE_PRIVATE);	
+			outputStream.write(("").getBytes());
+			outputStream.close();
+			Toast.makeText(getApplicationContext(),"OK",Toast.LENGTH_SHORT).show();
+		}
+		catch (IOException e)
+		{
+			Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+		}
+	}
+	
 	
 	public void toggleGPS(){
 		if(lServiceBound){
@@ -341,9 +389,9 @@ public class MainActivity extends Activity {
 
 			try {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-				// outputStream.write((params+"\n").getBytes());
-                // TODO: Find out what to do here - should all calls be logged?
-                outputStream.close();
+				JSONObject json= new JSONObject(paramset);	
+				outputStream.write((json+"\n").getBytes());
+              	outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -374,7 +422,6 @@ public class MainActivity extends Activity {
 		btn.setEnabled(false);
 		btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(true);
-        // myTimerThread.resetTime();
         Date moment = new Date();
         String params="";
 		HashMap<String, String> paramset = new HashMap<String, String>();
@@ -383,6 +430,7 @@ public class MainActivity extends Activity {
                 Location loc=lService.getLocation();
                 Double age=0.0;
 				if (APILEVEL > 16){
+					// better way of kkeping time, but not avaiable on older androids.
                     age=(loc.getElapsedRealtimeNanos()-SystemClock.elapsedRealtimeNanos())/1e9;
                 }else{
                     double currentTime = System.currentTimeMillis();
@@ -405,15 +453,13 @@ public class MainActivity extends Activity {
         }
         String ts=new SimpleDateFormat(dateformat).format(moment);
 		try{
-		//	debug("here");
 			paramset.put("drop",URLEncoder.encode(lastdrop));
             paramset.put("ts", URLEncoder.encode( ts));
             paramset.put("drag",URLEncoder.encode(lastdrag));
 			paramset.put("uuid",uuid);
-		//	debug("there");
 			paramset.put("username",URLEncoder.encode( username));
 			paramset.put("project",URLEncoder.encode(project));
-			paramset.put("freetext",URLEncoder.encode(freetext));
+			if(!(freetext.equals(""))) paramset.put("freetext",URLEncoder.encode(freetext));
 			
 			
             params="";
@@ -436,8 +482,11 @@ public class MainActivity extends Activity {
 
              try {
                 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
-                outputStream.write((params+"\n").getBytes());
-                outputStream.close();
+              //  outputStream.write((params+"\n").getBytes());
+				 JSONObject json= new JSONObject(paramset);	
+				 outputStream.write((json+"\n").getBytes());
+				 
+				  outputStream.close();
              } catch (Exception e) {
                 e.printStackTrace();
              }

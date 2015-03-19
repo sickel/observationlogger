@@ -45,4 +45,7 @@
     <string name="setsNotUploaded">sets not uploaded</string>
     <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
 	<string name="menu_clear">Clear data</string>
-</resources>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="dialog_resetfiles">Do you want to reset logs?</string>
+	</resources>
