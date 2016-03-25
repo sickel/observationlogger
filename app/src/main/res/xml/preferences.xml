@@ -71,6 +71,13 @@
             android:key="pref_timeout"
             android:summary="@string/pref_timeout_summary"
             android:title="@string/pref_timeout" />
+		<EditTextPreference
+            android:defaultValue="15:00"
+            android:dialogTitle="@string/pref_logperiod"
+            android:inputType="number"
+            android:key="pref_logperiod"
+            android:summary="@string/pref_logperiod"
+            android:title="@string/pref_logperiod" />
     </PreferenceCategory>
     <!--Any other categories include here
     -->

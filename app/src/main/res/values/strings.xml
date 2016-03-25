@@ -25,7 +25,7 @@
     <string name="pref_drop_names_summary">Comma separated list</string>
     <string name="pref_drag_names">Set names of the drag fields</string>
     <string name="pref_drag_names_summary">Comma separated list</string>
-    <string name="pref_timeout">Timeout</string>
+    <string name="pref_timeout">Timeout (s)</string>
     <string name="pref_timeout_summary">Settings to confirm or undo</string>
     <string name="pref_sec_values">Secondary values</string>
     <string name="pref_sec_values_summary">Secondary values</string>
@@ -44,4 +44,5 @@
     <string name="GPSLocationNotAvailable">GPS location not available</string>
     <string name="setsNotUploaded">sets not uploaded</string>
     <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
+	<string name="pref_logperiod">Log period (min)</string>
 </resources>

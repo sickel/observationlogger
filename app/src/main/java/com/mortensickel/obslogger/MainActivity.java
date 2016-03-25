@@ -52,12 +52,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.net.*;
+import android.net.*;
+import java.security.acl.*;
 
-
+// TODO: textlog of stored data
 // TODO: View log of stored data, export them
 // TODO: Fetch settings data from server
 // TODO: Photo
-
+// TODO: track down error on first registration
+// TODO: store and restore state if app is killed
+// TODO: reset last saved 
+// TODO: bigger countdown timer
+// TODO: logfile pr project.logfile May be viewed or exported / sent by email.
+// TODO: reset logfile
+// TODO: ad hoc behaviour in addition to freetext
+// TODO: ad hoc behaviour to be stored as new extra - pushed to other devices in same project
 public class MainActivity extends Activity {
 	LocationService lService;
 
@@ -78,9 +87,22 @@ public class MainActivity extends Activity {
     private String username, freetext;
     private int timeout=10;
 	private static final int ACTIVITY_ITEMLIST=0;
+	private SimpleDateFormat isoDateFormat=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z");
+	private SimpleDateFormat timeDateFormat=new SimpleDateFormat("HH.mm.ss");
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if( savedInstanceState != null ) {
+			lastdrag=savedInstanceState.getString("lastdrag");
+			lastdrop=savedInstanceState.getString("lastdrop");
+			lasttimestamp=savedInstanceState.getString("lasttimestamp");
+			try{
+			myTimerThread.setTime(lasttimestamp);
+			}catch(java.text.ParseException e){
+				debug("time format error");
+			}
+			//Toast.makeText(this, savedInstanceState .getString("lastdrag"), Toast.LENGTH_LONG).show();
+		}
 		uuid=Installation.id(getApplicationContext());
 	    setContentView(R.layout.main);
 		ActionBar actionBar = getActionBar();
@@ -128,7 +150,14 @@ public class MainActivity extends Activity {
         bindService(intent,lServiceConnection,Context.BIND_AUTO_CREATE);
 	}
 	
-	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("lastdrag", lastdrag);
+		outState.putString("lastdrop", lastdrop);
+		outState.putString("lasttimestamp", lasttimestamp);
+		
+	}
 	
 	@Override
 	protected void onStop(){
@@ -168,8 +197,16 @@ public class MainActivity extends Activity {
         }
         showStatus(lnum.toString());
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
-        txtLast.setText(lasttimestamp + ": " + lastdrag + " " + lastdrop);
-
+		String otime="";
+		if(!(lasttimestamp.equals(""))){
+		try{
+           otime=timeDateFormat.format(isoDateFormat.parse(lasttimestamp));
+	       
+		}catch(java.text.ParseException e){
+			debug("time format error");
+			otime=lasttimestamp;
+		}}
+		txtLast.setText(otime + ": " + lastdrag + " " + lastdrop);
     }
 
     public void debug(String t){
@@ -333,6 +370,7 @@ public class MainActivity extends Activity {
 				outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
 				// outputStream.write((params+"\n").getBytes());
                 // TODO: Find out what to do here - should all calls be logged?
+				// TODO: Log as csv for later export / may turn off. warning if neither file nor upload is enabled.
                 outputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -434,8 +472,8 @@ public class MainActivity extends Activity {
 		}catch (Exception e) {
 		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
 		}
-		String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-        lasttimestamp = otime;
+		String otime=timeDateFormat.format(moment);
+        lasttimestamp = isoDateFormat.format(moment);
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
         txtLast.setText(otime + ": " + drag + " " + drop);
         Integer lnum=0;
@@ -540,9 +578,11 @@ public class MainActivity extends Activity {
 
                     TextView tv = (TextView) event.getLocalState();
                     String t = tv.getText().toString();
+					lastdrag=t;
                     TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
-                    String otime=new SimpleDateFormat("HH.mm.ss").format(moment);
-                    if (ll.getChildAt(n - 1) == v) {
+                    String otime=timeDateFormat.format(moment);
+                    lasttimestamp=isoDateFormat.format(moment);
+					if (ll.getChildAt(n - 1) == v) {
                         Intent i = new Intent(getApplicationContext(), itemList.class);
                         i.putExtra("lastdrag", t);
                         i.putExtra("lasttime", otime);
@@ -551,6 +591,7 @@ public class MainActivity extends Activity {
                         Object sv = ((ViewGroup) v).getChildAt(0);
                         st = ((TextView) sv).getText().toString();
                     }
+					lastdrop=st;
                     Button bt = (Button) findViewById(R.id.btnConfirm);
                     bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
@@ -616,7 +657,11 @@ public class MainActivity extends Activity {
 			public void resetTime(){
 				this.startTime=new Date().getTime();
 			}
-
+			
+			public void setTime(String time) throws java.text.ParseException {
+				this.startTime=isoDateFormat.parse(time).getTime();
+	
+			}
             @Override
 			public void run()
 			{
