@@ -99,13 +99,11 @@ public class MainActivity extends Activity {
 			lastdrag=savedInstanceState.getString("lastdrag");
 			lastdrop=savedInstanceState.getString("lastdrop");
 			lasttimestamp=savedInstanceState.getString("lasttimestamp");
-			//waitmins=savedInstanceState.getLong("pref_logperiod",15);
 			try{
 				myTimerThread.setTime(lasttimestamp);
 			}catch(java.text.ParseException e){
 				debug("time format error");
 			}
-			//Toast.makeText(this, savedInstanceState .getString("lastdrag"), Toast.LENGTH_LONG).show();
 		}
 		uuid=Installation.id(getApplicationContext());
 	    setContentView(R.layout.main);
@@ -609,15 +607,12 @@ public class MainActivity extends Activity {
 			}
 			return true;
 		}
-		
-		
-		
-		
-		
-		}
+	}
+	
+	
 	String formatminsec(long sec){
 		String ct="";
-		if(sec>3599){
+		if(sec>3599){ // dont mind zero hours
 			long hr=sec/3600;
 			ct+=hr+":";
 			sec-=hr*3600;
@@ -625,6 +620,9 @@ public class MainActivity extends Activity {
 		if(sec > 59){
 			// TODO: hour if > 60 min
 			long min=sec/60;
+			if(min<10){
+				ct+="0";
+			}
 			sec=sec-60*min;
 			if(sec < 10){
 				ct+=min+":0"+sec;
@@ -632,7 +630,11 @@ public class MainActivity extends Activity {
 				ct+=min+":"+sec;
 			}
 		}else{
-			ct+="00:"+ sec;}
+			ct+="00:";
+			if(sec<10){
+			   ct+="0";
+			}
+			ct+=sec;}
 		return(ct);
 	}
 	

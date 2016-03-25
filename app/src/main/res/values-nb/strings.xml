@@ -43,4 +43,5 @@
     <string name="secnames"></string>
     <string name="altnames">Drikker, Sloss</string>
 	<string name="till_next_obs">Til neste:</string>
+	<string name="perf_logperiod">Registreringsperiode (min)</string>
 </resources>
