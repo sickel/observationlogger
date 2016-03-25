@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
 
 import com.mortensickel.obslogger.LocationService.LocalBinder;
 
@@ -60,9 +61,9 @@ import java.security.acl.*;
 // TODO: Fetch settings data from server
 // TODO: Photo
 // TODO: track down error on first registration
-// TODO: store and restore state if app is killed
+// DONE: store and restore state if app is killed
 // TODO: reset last saved 
-// TODO: bigger countdown timer
+// DONE: bigger countdown timer
 // TODO: logfile pr project.logfile May be viewed or exported / sent by email.
 // TODO: reset logfile
 // TODO: ad hoc behaviour in addition to freetext
@@ -89,6 +90,8 @@ public class MainActivity extends Activity {
 	private static final int ACTIVITY_ITEMLIST=0;
 	private SimpleDateFormat isoDateFormat=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z");
 	private SimpleDateFormat timeDateFormat=new SimpleDateFormat("HH.mm.ss");
+	private long waitmins;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,6 +99,7 @@ public class MainActivity extends Activity {
 			lastdrag=savedInstanceState.getString("lastdrag");
 			lastdrop=savedInstanceState.getString("lastdrop");
 			lasttimestamp=savedInstanceState.getString("lasttimestamp");
+			//waitmins=savedInstanceState.getLong("pref_logperiod",15);
 			try{
 			myTimerThread.setTime(lasttimestamp);
 			}catch(java.text.ParseException e){
@@ -181,6 +185,7 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
+		waitmins=Integer.parseInt(sharedPrefs.getString("pref_logperiod","10"));
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
         String dragnames=sharedPrefs.getString("dragNames", getResources().getString(R.string.dragnames));
         ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
@@ -611,7 +616,25 @@ public class MainActivity extends Activity {
 		
 		
 		}
+	String formatminsec(long sec){
+		String ct;
+		if(sec > 59){
+			// TODO: hour if > 60 min
+			long min=sec/60;
 
+			//if(min )
+			sec=sec-60*min;
+			if(sec < 10){
+				ct=min+":0"+sec;
+			}else{
+				ct=min+":"+sec;
+			}
+		}else{
+			ct= sec+ "s";}
+		return(ct);
+	}
+	
+		
 		void doWork(final long startTime){
 			runOnUiThread(new Runnable(){
 					public void run(){
@@ -619,8 +642,8 @@ public class MainActivity extends Activity {
 							TextView txtTimer = (TextView)findViewById(R.id.tvWaitTime);
 							Date dt= new Date();
 							long sec=dt.getTime();
-							sec=(sec-startTime)/1000;
-
+							long etime=(sec-startTime)/1000;
+							sec=etime;
 							if(sec>timeout && timeout > 0){
 								// undo timeout. to be set in settings
 								Button bt=(Button)findViewById(R.id.btnUndo);
@@ -629,25 +652,31 @@ public class MainActivity extends Activity {
 								bt.setEnabled(false);
 								
 							}
-							String ct;
-                            if(sec > 59){
-							// TODO: hour if > 60 min
-								long min=sec/60;
-
-                                //if(min )
-								sec=sec-60*min;
-								if(sec < 10){
-									ct=min+":0"+sec;
+							String ct="-";
+							if(!lastdrop.equals("")){
+								ct=formatminsec(sec);
+							}
+							txtTimer.setText(ct);
+							ct="0";
+							if(!lastdrop.equals("")){
+								long waittime=waitmins*60-etime; // 15 min - to be read from user settings
+								LinearLayout ll =(LinearLayout)findViewById(R.id.ll_timeout);
+								if(waittime < 0){
+									waittime=0;
+									ll.setBackgroundColor(Color.RED);
 								}else{
-									ct=min+":"+sec;
+									ll.setBackgroundColor(Color.WHITE);
 								}
-							}else{
-								ct= sec+ "s";}
+								ct=formatminsec(waittime);
+							}
+							txtTimer = (TextView)findViewById(R.id.tvTimeToNext);
+
 							txtTimer.setText(ct);
 						}catch(Exception e){}
 					}
-				});
-
+				});             
+				
+				
 		}
 
 
@@ -655,11 +684,11 @@ public class MainActivity extends Activity {
 		{
 			private long startTime=new Date().getTime();
 			public void resetTime(){
-				this.startTime=new Date().getTime();
+			this.startTime=new Date().getTime();
 			}
 			
 			public void setTime(String time) throws java.text.ParseException {
-				this.startTime=isoDateFormat.parse(time).getTime();
+					this.startTime=isoDateFormat.parse(time).getTime();
 	
 			}
             @Override

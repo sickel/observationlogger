@@ -42,4 +42,5 @@
     <string name="dragnames">240,242,244,245,260</string>
     <string name="secnames"></string>
     <string name="altnames">Drikker, Sloss</string>
+	<string name="till_next_obs">Til neste:</string>
 </resources>
