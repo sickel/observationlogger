@@ -120,6 +120,7 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
+		freetext="";
 	}
 
 
@@ -449,7 +450,6 @@ public class MainActivity extends Activity {
 			paramset.put("username",URLEncoder.encode( username));
 			paramset.put("project",URLEncoder.encode(project));
 			paramset.put("freetext",URLEncoder.encode(freetext));
-	
             params="";
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
                 String key = entry.getKey();
