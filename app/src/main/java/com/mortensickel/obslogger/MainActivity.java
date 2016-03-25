@@ -60,7 +60,7 @@ import java.security.acl.*;
 // TODO: View log of stored data, export them
 // TODO: Fetch settings data from server
 // TODO: Photo
-// TODO: track down error on first registration
+// DONE: track down error on first registration
 // DONE: store and restore state if app is killed
 // TODO: reset last saved 
 // DONE: bigger countdown timer
@@ -616,20 +616,23 @@ public class MainActivity extends Activity {
 		
 		}
 	String formatminsec(long sec){
-		String ct;
+		String ct="";
+		if(sec>3599){
+			long hr=sec/3600;
+			ct+=hr+":";
+			sec-=hr*3600;
+		}
 		if(sec > 59){
 			// TODO: hour if > 60 min
 			long min=sec/60;
-
-			//if(min )
 			sec=sec-60*min;
 			if(sec < 10){
-				ct=min+":0"+sec;
+				ct+=min+":0"+sec;
 			}else{
-				ct=min+":"+sec;
+				ct+=min+":"+sec;
 			}
 		}else{
-			ct= sec+ "s";}
+			ct+="00:"+ sec;}
 		return(ct);
 	}
 	
