@@ -68,9 +68,9 @@ import java.security.acl.*;
 // TODO: reset logfile
 // TODO: ad hoc behaviour in addition to freetext
 // TODO: ad hoc behaviour to be stored as new extra - pushed to other devices in same project
+
 public class MainActivity extends Activity {
 	LocationService lService;
-
     private static String LOGTAG="Obslogger";
     private String lastdrag = "";
     private String lastdrop = "";
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
 			lasttimestamp=savedInstanceState.getString("lasttimestamp");
 			//waitmins=savedInstanceState.getLong("pref_logperiod",15);
 			try{
-			myTimerThread.setTime(lasttimestamp);
+				myTimerThread.setTime(lasttimestamp);
 			}catch(java.text.ParseException e){
 				debug("time format error");
 			}
@@ -120,7 +120,6 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
-
 	}
 
 
