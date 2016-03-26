@@ -31,7 +31,6 @@
 			>
 			<TextView
 				android:textSize="20sp"
-
 				android:text="@string/waittime"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
@@ -80,7 +79,7 @@
 			android:layout_height="50dp"
 			android:orientation="horizontal"
 			android:gravity="center_horizontal"
-			android:id="@+id/ll_timeout"
+			android:id="@+id/llCountDown"
 			>
 				<TextView
 					android:textSize="30sp"

@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
 
+import android.os.Vibrator;
 import com.mortensickel.obslogger.LocationService.LocalBinder;
 
 import java.io.BufferedReader;
@@ -68,14 +69,14 @@ import android.content.res.*;
 // DONE: store and restore state if app is killed
 // DONE: reset last saved 
 // DONE: bigger countdown timer
-// TODO: Use vibration when time for new observation
+// DONE: Use vibration when time for new observation - check on phone
 // TODO: silent mode
-// TODO: Hide countdown timer if period=0
-// TODO: logfile pr project.logfile May be viewed or exported / sent by email.
+// DONE: Hide countdown timer if period=0
+// TODO: logfile pr project. Logfile may be viewed or exported / sent by email.
 // TODO: reset logfile
 // TODO: ad hoc behaviour in addition to freetext
 // TODO: ad hoc behaviour to be stored as new extra - pushed to other devices in same project
-// TODO: set comments in settings to show values
+// TODO: set comments in settings to show actual values
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -88,12 +89,13 @@ public class MainActivity extends Activity {
     private boolean doUpload=true;
     private String savefile="observations.dat";
 	private String errorfile="errors.dat";
-	private String project;
+	private String project="";
     private final ShowTimeRunner myTimerThread = new ShowTimeRunner();
     private static final int RESULT_SETTINGS = 1;
     private static final int APILEVEL= Build.VERSION.SDK_INT;
-    private String uuid;
-    private String username, freetext;
+    private String uuid="";
+    private String username="";
+	private String freetext="";;
     private int timeout=10;
 	private static final int ACTIVITY_ITEMLIST=0;
 	private SimpleDateFormat isoDateFormat=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z");
@@ -112,7 +114,7 @@ public class MainActivity extends Activity {
 				myTimerThread.setTime(lasttimestamp);
 
 				if(myTimerThread.getTime()>cleardisplay*3600){
-					// dont mind obs after 24 hours
+					// dont mind to display obs after cleardisplay hours hours
 					lastdrag="";
 					lastdrop="";
 				}
@@ -133,7 +135,6 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 		bt=(Button)findViewById(R.id.btnUndo);
 		bt.setEnabled(false);
-		freetext="";
 	}
 
 
@@ -202,6 +203,12 @@ public class MainActivity extends Activity {
 		}
 		cleardisplay=Integer.parseInt(sharedPrefs.getString("pref_cleardisplay","24"));
 		waitmins=Integer.parseInt(sharedPrefs.getString("pref_logperiod","10"));
+		View countdown=findViewById(R.id.llCountDown);
+		if(waitmins==0){
+			countdown.setVisibility(View.GONE);
+		}else{
+			countdown.setVisibility(View.VISIBLE);
+		}
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
         String dragnames=sharedPrefs.getString("dragNames", getResources().getString(R.string.dragnames));
         ViewGroup ll =(ViewGroup)findViewById(R.id.dragzones);
@@ -575,7 +582,7 @@ public class MainActivity extends Activity {
 		final Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
-	   @Override
+	   	@Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
 			switch (action) {
@@ -670,8 +677,7 @@ public class MainActivity extends Activity {
 								Button bt=(Button)findViewById(R.id.btnUndo);
 								bt.setEnabled(false);
 								bt=(Button)findViewById(R.id.btnConfirm);
-								bt.setEnabled(false);
-								
+								bt.setEnabled(false);		
 							}
 							String ct="-";
 							if(!lastdrop.equals("")){
@@ -679,18 +685,32 @@ public class MainActivity extends Activity {
 							}
 							txtTimer.setText(ct);
 							if(waitmins >0){
-							ct="0";
-							if(!lastdrop.equals("")){
-								long waittime=waitmins*60-etime;
-								LinearLayout ll =(LinearLayout)findViewById(R.id.llMiddle);
-								if(waittime < 0){
-									waittime=0;
-									ll.setBackgroundColor(Color.RED);
-								}else{
-									ll.setBackgroundColor(Color.WHITE);
+								ct="0";
+								if(!lastdrop.equals("")){
+									long waittime=waitmins*60-etime;
+									LinearLayout ll =(LinearLayout)findViewById(R.id.llMiddle);
+									if(waittime < 0){
+										waittime=0;
+										ll.setBackgroundColor(Color.RED);
+										
+									}else{
+										if(waittime==0){
+											Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+										// Vibrate for 500 milliseconds
+											if (v.hasVibrator()) {
+												v.vibrate(500);
+											} else {
+												debug("Can Vibrate - NO");
+											}
+											
+										}
+										ll.setBackgroundColor(Color.WHITE);
+									}
+									ct=formatminsec(waittime);
 								}
-								ct=formatminsec(waittime);
-							}}else{ct="";}
+							}else{
+								ct="";
+							}
 							txtTimer = (TextView)findViewById(R.id.tvTimeToNext);
 							txtTimer.setText(ct);
 						}catch(Exception e){}
