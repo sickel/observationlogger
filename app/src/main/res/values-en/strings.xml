@@ -46,4 +46,6 @@
     <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
     <string name="secnames"></string>
 	<string name="errUsernameProject">Set username and project</string>
+	<string name="errTimeFormat">Time format error</string>
+	<string name="errStaleGps">Stale GPSdata</string>
 </resources>

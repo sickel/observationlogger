@@ -55,20 +55,27 @@ import java.util.Map;
 import java.net.*;
 import android.net.*;
 import java.security.acl.*;
+import android.content.res.*;
+
 // TODO: Demand project and user name before uploading
+// DONE: reminds of project and user name
 // TODO: textlog of stored data
 // TODO: View log of stored data, export them
+// TODO: create kml of observations
 // TODO: Fetch settings data from server
 // TODO: Photo
 // DONE: track down error on first registration
 // DONE: store and restore state if app is killed
-// TODO: reset last saved 
+// DONE: reset last saved 
 // DONE: bigger countdown timer
+// TODO: Use vibration when time for new observation
+// TODO: silent mode
 // TODO: Hide countdown timer if period=0
 // TODO: logfile pr project.logfile May be viewed or exported / sent by email.
 // TODO: reset logfile
 // TODO: ad hoc behaviour in addition to freetext
 // TODO: ad hoc behaviour to be stored as new extra - pushed to other devices in same project
+// TODO: set comments in settings to show values
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -93,6 +100,7 @@ public class MainActivity extends Activity {
 	private SimpleDateFormat timeDateFormat=new SimpleDateFormat("HH.mm.ss");
 	private long waitmins;
 	private long cleardisplay=24;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +117,7 @@ public class MainActivity extends Activity {
 					lastdrop="";
 				}
 			}catch(java.text.ParseException e){
-				debug("time format error");
+				debug("time format error 117");
 			}
 		}
 		uuid=Installation.id(getApplicationContext());
@@ -139,7 +147,6 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void startGPS(){
-		
 		Intent intent=new Intent(this, LocationService.class);
 		intent.setAction("startListening");
 		startService(intent);
@@ -189,6 +196,7 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
+		
 		if(username.equals("")||project.equals("")){
 			debug(getResources().getString(R.string.errUsernameProject).toString());
 		}
@@ -215,7 +223,9 @@ public class MainActivity extends Activity {
         	   otime=timeDateFormat.format(isoDateFormat.parse(lasttimestamp));  
 			}
 			catch(java.text.ParseException e){
-				debug("time format error");
+				if(!lasttimestamp.equals("")){
+					// will expect.empty timestamp before first registration
+					debug(getResources().getString(R.string.errTimeFormat));}
 				otime=lasttimestamp;
 			}
 		}
@@ -348,7 +358,7 @@ public class MainActivity extends Activity {
                     new PostObservation().execute(paramset);
 				}
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(),"error 359 "+e,Toast.LENGTH_LONG).show();
 			}
 		}
         Integer lnum=0;
@@ -369,12 +379,12 @@ public class MainActivity extends Activity {
         paramset.put("undo","undo");
         paramset.put("uuid",uuid);
         Date moment = new Date();
-        String ts = new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z").format(moment);
+        String ts = isoDateFormat.format(moment);
         paramset.put("ts",ts);
        	try{
 			new PostObservation().execute(paramset);
 		} catch (Exception e) {
-			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(),"error 385 "+e,Toast.LENGTH_LONG).show();
 		}
 		try{
 			FileOutputStream outputStream;
@@ -389,7 +399,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		}catch (Exception e) {
-			Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();	
+			Toast.makeText(getApplicationContext(),"error 400"+e,Toast.LENGTH_LONG).show();	
 		}
         Integer lnum=0;
         try {
@@ -430,7 +440,7 @@ public class MainActivity extends Activity {
                     age=(currentTime - loc.getTime())/1000;
                 }
 				if(age/60>5){
-				   throw new Exception("Stale gps");
+				   throw new Exception(getResources().getString(R.string.errStaleGps));
 			  	}
 				paramset.put("age",age.toString());
 				paramset.put("lat",String.valueOf(loc.getLatitude()));
@@ -467,7 +477,7 @@ public class MainActivity extends Activity {
             }
     	    new PostObservation().execute(paramset);
 		} catch (Exception e) {
-		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
+		    Toast.makeText(getApplicationContext(),"error 478 "+e,Toast.LENGTH_LONG).show();
 		}
 		freetext="";
 		try{
@@ -482,7 +492,7 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
              }
 		}catch (Exception e) {
-		    Toast.makeText(getApplicationContext(),"error "+e,Toast.LENGTH_LONG).show();
+		    Toast.makeText(getApplicationContext(),"error 493 "+e,Toast.LENGTH_LONG).show();
 		}
 		String otime=timeDateFormat.format(moment);
         lasttimestamp = isoDateFormat.format(moment);
@@ -760,7 +770,7 @@ public class MainActivity extends Activity {
 
 					try {
 						outputStream = openFileOutput(errorfile, getApplicationContext().MODE_APPEND);
-						outputStream.write(("Error "+e.getMessage()+"\n").getBytes());
+						outputStream.write(("Error 721 "+e.getMessage()+"\n").getBytes());
 						outputStream.write((params+"\n").getBytes());
 						outputStream.close();
 					} catch (Exception fe) {

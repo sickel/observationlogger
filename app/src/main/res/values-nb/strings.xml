@@ -46,5 +46,6 @@
 	<string name="pref_logperiod">Registreringsperiode (min)</string>
 	<string name="pref_cleardisplay">Maksimal obs. periode (timer)</string>
 	<string name="errUsernameProject">Sett brukernavn og prosjekt</string>
-	
+	<string name="errTimeFormat">Feil i tidsformat</string>
+	<string name="errStaleGps">For gamle GPSdata</string>
 </resources>
