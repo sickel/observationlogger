@@ -85,6 +85,12 @@
             android:key="pref_cleardisplay"
             android:summary="@string/pref_cleardisplay"
             android:title="@string/pref_cleardisplay" />
+		<CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefQuietMode"
+            android:summary="@string/quietMode"
+            android:title="@string/quietMode" />
+			
     </PreferenceCategory>
     <!--Any other categories include here
     -->

@@ -70,7 +70,7 @@ import android.content.res.*;
 // DONE: reset last saved 
 // DONE: bigger countdown timer
 // DONE: Use vibration when time for new observation - check on phone
-// TODO: silent mode
+// DONE: silent mode
 // DONE: Hide countdown timer if period=0
 // TODO: logfile pr project. Logfile may be viewed or exported / sent by email.
 // TODO: reset logfile
@@ -102,6 +102,7 @@ public class MainActivity extends Activity {
 	private SimpleDateFormat timeDateFormat=new SimpleDateFormat("HH.mm.ss");
 	private long waitmins;
 	private long cleardisplay=24;
+	private boolean quietMode = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -197,7 +198,7 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
-		
+		quietMode=sharedPrefs.getBoolean("prefQuietMode",false);
 		if(username.equals("")||project.equals("")){
 			debug(getResources().getString(R.string.errUsernameProject).toString());
 		}
@@ -695,6 +696,8 @@ public class MainActivity extends Activity {
 										
 									}else{
 										if(waittime==0){
+											if(!quietMode){
+											
 											Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 										// Vibrate for 500 milliseconds
 											if (v.hasVibrator()) {
@@ -702,7 +705,7 @@ public class MainActivity extends Activity {
 											} else {
 												debug("Can Vibrate - NO");
 											}
-											
+											}
 										}
 										ll.setBackgroundColor(Color.WHITE);
 									}

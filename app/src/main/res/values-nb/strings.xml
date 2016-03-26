@@ -48,4 +48,5 @@
 	<string name="errUsernameProject">Sett brukernavn og prosjekt</string>
 	<string name="errTimeFormat">Feil i tidsformat</string>
 	<string name="errStaleGps">For gamle GPSdata</string>
+	<string name="quietMode">Stille - ingen vibrasjon</string>
 </resources>
