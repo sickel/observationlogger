@@ -165,7 +165,6 @@ public class MainActivity extends Activity {
 		outState.putString("lastdrag", lastdrag);
 		outState.putString("lastdrop", lastdrop);
 		outState.putString("lasttimestamp", lasttimestamp);
-		
 	}
 	
 	@Override
@@ -190,6 +189,9 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
+		if(username.equals("")||project.equals("")){
+			debug(getResources().getString(R.string.errUsernameProject).toString());
+		}
 		cleardisplay=Integer.parseInt(sharedPrefs.getString("pref_cleardisplay","24"));
 		waitmins=Integer.parseInt(sharedPrefs.getString("pref_logperiod","10"));
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
@@ -199,7 +201,6 @@ public class MainActivity extends Activity {
         String dropnames=sharedPrefs.getString("dropNames", getResources().getString(R.string.dropnames));
         ll =(ViewGroup)findViewById(R.id.dropzones);
         setZones(ll,dropnames);
-
         Integer lnum = 0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -210,13 +211,14 @@ public class MainActivity extends Activity {
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
 		String otime="";
 		if(!(lasttimestamp.equals(""))){
-		try{
-           otime=timeDateFormat.format(isoDateFormat.parse(lasttimestamp));
-	       
-		}catch(java.text.ParseException e){
-			debug("time format error");
-			otime=lasttimestamp;
-		}}
+			try{
+        	   otime=timeDateFormat.format(isoDateFormat.parse(lasttimestamp));  
+			}
+			catch(java.text.ParseException e){
+				debug("time format error");
+				otime=lasttimestamp;
+			}
+		}
 		txtLast.setText(otime + ": " + lastdrag + " " + lastdrop);
     }
 
@@ -670,7 +672,7 @@ public class MainActivity extends Activity {
 							ct="0";
 							if(!lastdrop.equals("")){
 								long waittime=waitmins*60-etime;
-								LinearLayout ll =(LinearLayout)findViewById(R.id.ll_timeout);
+								LinearLayout ll =(LinearLayout)findViewById(R.id.llMiddle);
 								if(waittime < 0){
 									waittime=0;
 									ll.setBackgroundColor(Color.RED);

@@ -45,4 +45,5 @@
     <string name="setsNotUploaded">sets not uploaded</string>
     <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
     <string name="secnames"></string>
+	<string name="errUsernameProject">Set username and project</string>
 </resources>
