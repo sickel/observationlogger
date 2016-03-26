@@ -78,6 +78,13 @@
             android:key="pref_logperiod"
             android:summary="@string/pref_logperiod"
             android:title="@string/pref_logperiod" />
+		<EditTextPreference
+            android:defaultValue="20"
+            android:dialogTitle="@string/pref_cleardisplay"
+            android:inputType="number"
+            android:key="pref_cleardisplay"
+            android:summary="@string/pref_cleardisplay"
+            android:title="@string/pref_cleardisplay" />
     </PreferenceCategory>
     <!--Any other categories include here
     -->

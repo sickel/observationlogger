@@ -43,5 +43,6 @@
     <string name="secnames"></string>
     <string name="altnames">Drikker, Sloss</string>
 	<string name="till_next_obs">Til neste:</string>
-	<string name="perf_logperiod">Registreringsperiode (min)</string>
+	<string name="pref_logperiod">Registreringsperiode (min)</string>
+	<string name="pref_cleardisplay">Maksimal obs. periode (timer)</string>
 </resources>

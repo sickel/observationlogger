@@ -55,7 +55,7 @@ import java.util.Map;
 import java.net.*;
 import android.net.*;
 import java.security.acl.*;
-
+// TODO: Demand project and user name before uploading
 // TODO: textlog of stored data
 // TODO: View log of stored data, export them
 // TODO: Fetch settings data from server
@@ -64,6 +64,7 @@ import java.security.acl.*;
 // DONE: store and restore state if app is killed
 // TODO: reset last saved 
 // DONE: bigger countdown timer
+// TODO: Hide countdown timer if period=0
 // TODO: logfile pr project.logfile May be viewed or exported / sent by email.
 // TODO: reset logfile
 // TODO: ad hoc behaviour in addition to freetext
@@ -91,7 +92,7 @@ public class MainActivity extends Activity {
 	private SimpleDateFormat isoDateFormat=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z");
 	private SimpleDateFormat timeDateFormat=new SimpleDateFormat("HH.mm.ss");
 	private long waitmins;
-	
+	private long cleardisplay=24;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -101,6 +102,12 @@ public class MainActivity extends Activity {
 			lasttimestamp=savedInstanceState.getString("lasttimestamp");
 			try{
 				myTimerThread.setTime(lasttimestamp);
+
+				if(myTimerThread.getTime()>cleardisplay*3600){
+					// dont mind obs after 24 hours
+					lastdrag="";
+					lastdrop="";
+				}
 			}catch(java.text.ParseException e){
 				debug("time format error");
 			}
@@ -183,6 +190,7 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
+		cleardisplay=Integer.parseInt(sharedPrefs.getString("pref_cleardisplay","24"));
 		waitmins=Integer.parseInt(sharedPrefs.getString("pref_logperiod","10"));
         timeout=Integer.parseInt(sharedPrefs.getString("pref_timeout","20"));
         String dragnames=sharedPrefs.getString("dragNames", getResources().getString(R.string.dragnames));
@@ -569,15 +577,12 @@ public class MainActivity extends Activity {
                     if (APILEVEL>15)  v.setBackground(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
-
-
                     // Dropped, reassign View to ViewGroup
 					myTimerThread.resetTime();
                     Date moment = new Date();
                     LinearLayout ll = (LinearLayout) v.getParent();
                     Integer n = ll.getChildCount();
                     String st = "";
-
                     TextView tv = (TextView) event.getLocalState();
                     String t = tv.getText().toString();
 					lastdrag=t;
@@ -661,9 +666,10 @@ public class MainActivity extends Activity {
 								ct=formatminsec(sec);
 							}
 							txtTimer.setText(ct);
+							if(waitmins >0){
 							ct="0";
 							if(!lastdrop.equals("")){
-								long waittime=waitmins*60-etime; // 15 min - to be read from user settings
+								long waittime=waitmins*60-etime;
 								LinearLayout ll =(LinearLayout)findViewById(R.id.ll_timeout);
 								if(waittime < 0){
 									waittime=0;
@@ -672,9 +678,8 @@ public class MainActivity extends Activity {
 									ll.setBackgroundColor(Color.WHITE);
 								}
 								ct=formatminsec(waittime);
-							}
+							}}else{ct="";}
 							txtTimer = (TextView)findViewById(R.id.tvTimeToNext);
-
 							txtTimer.setText(ct);
 						}catch(Exception e){}
 					}
@@ -693,8 +698,13 @@ public class MainActivity extends Activity {
 			
 			public void setTime(String time) throws java.text.ParseException {
 					this.startTime=isoDateFormat.parse(time).getTime();
-	
 			}
+			
+			public long getTime(){
+				long time=new Date().getTime()-this.startTime;
+				return(time);
+			}
+			
             @Override
 			public void run()
 			{
