@@ -10,7 +10,7 @@
             android:summary="@string/upload"
             android:title="@string/upload" />
         <EditTextPreference
-            android:defaultValue="http://hhv3.sickel.net/obstest/"
+            android:defaultValue="http://sickel.net/obslog/store.php"
             android:dependency="doUpload"
             android:dialogTitle="@string/uploadurl"
             android:key="uploadURL"
