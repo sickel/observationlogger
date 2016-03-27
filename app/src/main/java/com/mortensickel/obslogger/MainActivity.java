@@ -103,6 +103,7 @@ public class MainActivity extends Activity {
 	private long waitmins;
 	private long cleardisplay=24;
 	private boolean quietMode = false;
+	private boolean keepUnlocked = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -314,6 +315,10 @@ public class MainActivity extends Activity {
 			case R.id.menu_togglegps:
 			    toggleGPS();
 				break;
+			case R.id.menu_unlock:
+				Button btn=(Button)findViewById(R.id.btnConfirm);
+				btn.setEnabled(true);
+				keepUnlocked=true;
         }
         return true;
     }
@@ -426,6 +431,7 @@ public class MainActivity extends Activity {
 	{
 	    Button btn=(Button)findViewById(R.id.btnConfirm);
 		btn.setEnabled(false);
+		keepUnlocked=false;
 		btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(true);
         // myTimerThread.resetTime();
@@ -659,7 +665,7 @@ public class MainActivity extends Activity {
 								Button bt=(Button)findViewById(R.id.btnUndo);
 								bt.setEnabled(false);
 								bt=(Button)findViewById(R.id.btnConfirm);
-								bt.setEnabled(false);		
+								bt.setEnabled(keepUnlocked);		
 							}
 							String ct="-";
 							if(!lastdrop.equals("")){

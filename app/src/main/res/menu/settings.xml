@@ -5,6 +5,9 @@
         android:title="@string/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences" />
     <item
+        android:id="@+id/menu_unlock"
+        android:title="@string/unlock" />
+	<item
         android:id="@+id/menu_upload"
         android:title="@string/menu_upload" />
     <item
