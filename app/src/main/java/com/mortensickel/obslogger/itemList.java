@@ -45,10 +45,11 @@ public class itemList extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), MainActivity.class);
               	EditText et=(EditText)findViewById(R.id.observationText);
-				i.putExtra("freetext",et.getText().toString());
+				i.putExtra("lastdrop",et.getText().toString());
 				i.putExtra("lastdrag", lastdrag);
                 i.putExtra("lasttime", lasttimestamp);
-			//	Toast.makeText(getApplicationContext(),et.getText(),Toast.LENGTH_SHORT).show();
+				i.putExtra("freetext","");
+		//	Toast.makeText(getApplicationContext(),et.getText(),Toast.LENGTH_SHORT).show();
 				setResult(Activity.RESULT_OK,i);
 				finish();
             }

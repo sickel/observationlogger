@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    
-	 <TextView
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		
-		android:id="@+id/acbar_status"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:text="status"
-	/>
-    <!--
-    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/searchfield"
-        android:layout_width="match_parent"
+    <LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"	
+		android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inputType="textFilter" >
+		android:orientation="vertical"
+	>
+	 <TextView
+			android:id="@+id/acbar_status"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="status"
+	/> 
+<TextView
+	xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:id="@+id/acbarFreetext"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="Freetext"
+/>
+	</LinearLayout>
+<!--    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchfield"
+               android:inputType="textFilter" >
 
     </EditText> -->

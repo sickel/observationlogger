@@ -57,7 +57,7 @@ import java.net.*;
 import android.net.*;
 import java.security.acl.*;
 import android.content.res.*;
-
+// TODO: unlock by menu to confirm upload
 // TODO: Demand project and user name before uploading
 // DONE: reminds of project and user name
 // TODO: textlog of stored data
@@ -113,7 +113,6 @@ public class MainActivity extends Activity {
 			lasttimestamp=savedInstanceState.getString("lasttimestamp");
 			try{
 				myTimerThread.setTime(lasttimestamp);
-
 				if(myTimerThread.getTime()>cleardisplay*3600){
 					// dont mind to display obs after cleardisplay hours hours
 					lastdrag="";
@@ -159,7 +158,6 @@ public class MainActivity extends Activity {
                 lService = binder.getService();
                 lServiceBound=true;
             }
-
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 lServiceBound = false;
@@ -233,7 +231,7 @@ public class MainActivity extends Activity {
 			catch(java.text.ParseException e){
 				if(!lasttimestamp.equals("")){
 					// will expect.empty timestamp before first registration
-					debug(getResources().getString(R.string.errTimeFormat));}
+					debug(getResources().getString(R.string.errTimeFormat)+" 236");}
 				otime=lasttimestamp;
 			}
 		}
@@ -246,7 +244,6 @@ public class MainActivity extends Activity {
 
 	public void debug(Integer i){
 		Toast.makeText(getApplicationContext(),i.toString(),Toast.LENGTH_SHORT).show();
-
 	}
 
 	@Override 
@@ -317,10 +314,7 @@ public class MainActivity extends Activity {
 			case R.id.menu_togglegps:
 			    toggleGPS();
 				break;
-
-
         }
-
         return true;
     }
 
@@ -345,7 +339,6 @@ public class MainActivity extends Activity {
 			InputStream is=openFileInput(errorfile);
 			BufferedReader rdr =new BufferedReader(new InputStreamReader(is));
 			String myLine;
-			
 			while ((myLine=rdr.readLine())!=null) 
 				if (!(myLine.substring(0,5).equals("Error")))
 					linelist.add(myLine);	
@@ -380,7 +373,6 @@ public class MainActivity extends Activity {
 
 
     public void undoAct(View v){
-	
 		Button btn=(Button)findViewById(R.id.btnUndo);
 		btn.setEnabled(false);
         HashMap<String, String> paramset = new HashMap<String, String>();
@@ -424,6 +416,9 @@ public class MainActivity extends Activity {
             status = status + " " + getResources().getString(R.string.setsNotUploaded);
         TextView tvstatus =(TextView)findViewById(R.id.acbar_status);
         tvstatus.setText(status);
+		tvstatus =(TextView)findViewById(R.id.acbarFreetext);
+        tvstatus.setText(freetext);
+		
     }
 
 
@@ -467,7 +462,7 @@ public class MainActivity extends Activity {
         lastdrop = drop;
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
         lastdrag = drag;
-        String ts=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(moment);
+        String ts=isoDateFormat.format(moment);
 		try{
 			paramset.put("drop",URLEncoder.encode(drop));
             paramset.put("ts", URLEncoder.encode( ts));
@@ -489,9 +484,7 @@ public class MainActivity extends Activity {
 		}
 		freetext="";
 		try{
-
 		    FileOutputStream outputStream;
-
              try {
                 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
                 outputStream.write((params+"\n").getBytes());
@@ -518,17 +511,13 @@ public class MainActivity extends Activity {
 
     Integer linenumbers(File file) throws IOException
     {
-
-
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
-
         int lineCount = 0;
         while ((line = br.readLine()) != null)
             if (!(line.substring(0, 5).equals("Error"))) lineCount++;
         return (lineCount);
     }
-
 
 	
 	private final class MyTouchListener implements OnTouchListener {
@@ -547,7 +536,6 @@ public class MainActivity extends Activity {
 
 	class MyDragListener implements OnDragListener {
 		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
-
 	    @Override
 		public boolean onDrag(View v, DragEvent event) {
 			int action = event.getAction();
@@ -564,19 +552,12 @@ public class MainActivity extends Activity {
 						break;
 				case DragEvent.ACTION_DRAG_ENDED:
                     if (APILEVEL>=16) v.setBackground(normalShape);
-
 				default:
 					break;
 			}
 			return true;
 		}
-		
-		
-		
-		
-		
-		
-		}
+	}
 		
 		
 		class MyDropListener implements OnDragListener {
@@ -612,7 +593,7 @@ public class MainActivity extends Activity {
 					if (ll.getChildAt(n - 1) == v) {
                         Intent i = new Intent(getApplicationContext(), itemList.class);
                         i.putExtra("lastdrag", t);
-                        i.putExtra("lasttime", otime);
+                        i.putExtra("lasttime", lasttimestamp);
                         startActivityForResult(i, 0);
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
@@ -696,8 +677,7 @@ public class MainActivity extends Activity {
 										
 									}else{
 										if(waittime==0){
-											if(!quietMode){
-											
+											if(!quietMode){	
 											Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 										// Vibrate for 500 milliseconds
 											if (v.hasVibrator()) {
@@ -719,8 +699,6 @@ public class MainActivity extends Activity {
 						}catch(Exception e){}
 					}
 				});             
-				
-				
 		}
 
 
@@ -817,11 +795,7 @@ public class MainActivity extends Activity {
 			}
 
 		}
-
-
-
-
-			
+		
 }
 
 
