@@ -57,25 +57,28 @@ import java.net.*;
 import android.net.*;
 import java.security.acl.*;
 import android.content.res.*;
-// TODO: unlock by menu to confirm upload
+
+// DONE 1.6: unlock by menu to confirm upload
 // TODO: Demand project and user name before uploading
-// DONE: reminds of project and user name
-// TODO: textlog of stored data
-// TODO: View log of stored data, export them
-// TODO: create kml of observations
+// DONE 1.6: reminds of project and user name
 // TODO: Fetch settings data from server
-// TODO: Photo
-// DONE: track down error on first registration
-// DONE: store and restore state if app is killed
-// DONE: reset last saved 
-// DONE: bigger countdown timer
-// DONE: Use vibration when time for new observation - check on phone
-// DONE: silent mode
-// DONE: Hide countdown timer if period=0
-// TODO: logfile pr project. Logfile may be viewed or exported / sent by email.
-// TODO: reset logfile
-// TODO: ad hoc behaviour in addition to freetext
-// TODO: ad hoc behaviour to be stored as new extra - pushed to other devices in same project
+// TODO: Photo - take photo using normal app. Select and upload in app.
+// DONE 1.6: track down error on first registration
+// DONE 1.6: store and restore state if app is killed
+// DONE 1.6: reset last saved 
+// DONE 1.6: bigger countdown timer
+// DONE 1.6: Use vibration when time for new observation - check on phone
+// DONE 1.6: silent mode
+// DONE 1.6: Hide countdown timer if period=0
+// TODO: csv textlog of stored data
+// TODO: View log of stored data, export them
+// TODO: Send log by mail
+// TODO: create kml of observations
+// TODO: logfile pr project.
+// TODO: reset logfile from menu
+// DONE 1.6: ad hoc behaviour in addition to freetext
+// TODO: ad hoc behaviour to be stored as new extra - 
+// TODO: new ad hoc pushed to other devices in same project
 // TODO: set comments in settings to show actual values
 
 public class MainActivity extends Activity {
@@ -85,7 +88,8 @@ public class MainActivity extends Activity {
     private String lastdrop = "";
     private String lasttimestamp = "";
     boolean lServiceBound=false;
-	private String urlString="http://hhv3.sickel.net/beite/storeobs.php";
+	private String urlString="http://sickel.net/obslog/store.php";
+	// view data at http://sickel.net/obslog/read.php
     private boolean doUpload=true;
     private String savefile="observations.dat";
 	private String errorfile="errors.dat";
@@ -138,9 +142,7 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 	}
 
-
     private ServiceConnection lServiceConnection;
-
     // www.trution.com/2014/11/bound-service-example-android/
 	@Override
 	protected void onStart(){
@@ -182,7 +184,6 @@ public class MainActivity extends Activity {
 			stopGPS();
 		}
 	}
-	
 	
 	protected void  stopGPS(){
         // TODO: see if it is possible to turn of GPS immediately
@@ -251,21 +252,21 @@ public class MainActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {     
 		super.onActivityResult(requestCode, resultCode, i); 
 	//	debug(requestCode);
-	// TODO indicate existing freetext
+	// DONE indicate existing freetext
 		switch(requestCode) { 
 			case (ACTIVITY_ITEMLIST) : { 
 				if (resultCode == Activity.RESULT_OK) { 
-						Bundle extras = i.getExtras();
-						if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
-						if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
-						if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
-						if (extras.getString("freetext") != null) freetext = extras.getString("freetext");	
-						Button bt = (Button) findViewById(R.id.btnConfirm);
-						bt.setEnabled(true);
-						myTimerThread.resetTime();
-					} 
-					break; 
+					Bundle extras = i.getExtras();
+					if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
+					if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
+					if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
+					if (extras.getString("freetext") != null) freetext = extras.getString("freetext");	
+					Button bt = (Button) findViewById(R.id.btnConfirm);
+					bt.setEnabled(true);
+					myTimerThread.resetTime();
 				} 
+				break; 
+			} 
 		} 
 	}
 	
