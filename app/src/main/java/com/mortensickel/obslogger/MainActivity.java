@@ -553,7 +553,7 @@ public class MainActivity extends Activity {
 				case DragEvent.ACTION_DRAG_ENTERED:
 					break;
 				case DragEvent.ACTION_DRAG_EXITED:
-				//	v.setBackgroundDrawable(normalShape);
+					//	v.setBackgroundDrawable(normalShape);
 					break;
 				case DragEvent.ACTION_DROP:
 						break;
@@ -631,7 +631,6 @@ public class MainActivity extends Activity {
 			sec-=hr*3600;
 		}
 		if(sec > 59){
-			// TODO: hour if > 60 min
 			long min=sec/60;
 			if(min<10){
 				ct+="0";

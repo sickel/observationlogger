@@ -22,7 +22,7 @@ v 1.6 March 27 2016 (not yet on google play)
 
 * Reminder to fill in user name and project
 
-* Working default upload url. data can be viwed at http://sickel.net/obslog/read.php (no guarantee for real work, just for usability testing)
+* Working default upload url. data can be viwed at http://sickel.net/obslog/show.php (no guarantee for real work, just for usability testing)
 
 * Various clean up.
 
