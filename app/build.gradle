@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1051
-        versionName "1.5.1"
+        targetSdkVersion 22
+        versionCode 1062
+        versionName "1.6.2"
     }
     buildTypes {
         release {
