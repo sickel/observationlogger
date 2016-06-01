@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 1062
-        versionName "1.6.2"
+        targetSdkVersion 23
+        versionCode 1070
+        versionName "1.7.0"
     }
     buildTypes {
         release {
@@ -20,5 +20,8 @@ android {
 }
 
 dependencies {
+	compile 'com.android.support:appcompat-v7:+'
+	compile 'com.android.support:appcompat-v7:+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile 'com.android.support:appcompat-v7:23.3.0' 
 }

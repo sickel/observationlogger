@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.Manifest;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -57,6 +58,10 @@ import java.net.*;
 import android.net.*;
 import java.security.acl.*;
 import android.content.res.*;
+import java.lang.Object;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.app.ActivityCompat;
+import android.content.pm.*;
 
 // DONE 1.6: unlock by menu to confirm upload
 // TODO: Demand project and user name before uploading
@@ -80,6 +85,9 @@ import android.content.res.*;
 // TODO: ad hoc behaviour to be stored as new extra - 
 // TODO: new ad hoc pushed to other devices in same project
 // TODO: set comments in settings to show actual values
+// BUG: Cleardisplay does not work.
+// DONE: 1.7 Asks correctly for.permissions in android 6
+// TODO: Check if this causes problems in android 5
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -96,6 +104,7 @@ public class MainActivity extends Activity {
 	private String project="";
     private final ShowTimeRunner myTimerThread = new ShowTimeRunner();
     private static final int RESULT_SETTINGS = 1;
+	private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION =1;
     private static final int APILEVEL= Build.VERSION.SDK_INT;
     private String uuid="";
     private String username="";
@@ -107,6 +116,7 @@ public class MainActivity extends Activity {
 	private long waitmins;
 	private long cleardisplay=24;
 	private boolean quietMode = false;
+	private boolean useGPS = false;
 	private boolean keepUnlocked = false;
 	
 	@Override
@@ -124,7 +134,7 @@ public class MainActivity extends Activity {
 					lastdrop="";
 				}
 			}catch(java.text.ParseException e){
-				debug("time format error 117");
+				debug("time format error 137");
 			}
 		}
 		uuid=Installation.id(getApplicationContext());
@@ -142,12 +152,46 @@ public class MainActivity extends Activity {
 		bt.setEnabled(false);
 	}
 
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+					// If request is cancelled, the result arrays are empty.
+					if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+							startGPS();
+							useGPS=true;
+					} else {
+
+						// permission denied, boo! Disable the
+						// functionality that depends on this permission.
+					}
+					return;
+				}
+
+				// other 'case' lines to check for other
+				// permissions this app might request
+		}
+	}
+	
+	
+	
     private ServiceConnection lServiceConnection;
     // www.trution.com/2014/11/bound-service-example-android/
 	@Override
 	protected void onStart(){
 		super.onStart();
-		startGPS();
+		int permissionCheck = ContextCompat.checkSelfPermission(this,
+									Manifest.permission.ACCESS_FINE_LOCATION);
+		if (permissionCheck != PackageManager.PERMISSION_GRANTED){
+			ActivityCompat.requestPermissions(this,
+											  new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+											  MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+		}else{
+			startGPS();
+			useGPS=true;
+		}
 	}
 	
 	protected void startGPS(){
@@ -198,6 +242,7 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
+		// TODO: Check if <project>.csv exists if not - create it with a header line
 		quietMode=sharedPrefs.getBoolean("prefQuietMode",false);
 		if(username.equals("")||project.equals("")){
 			debug(getResources().getString(R.string.errUsernameProject).toString());
@@ -330,10 +375,13 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),getResources().getString( R.string.stopping_gps),Toast.LENGTH_SHORT).show();
 			stopGPS();
 		}else{
+			if(useGPS){
 			Toast.makeText(getApplicationContext(),getResources().getString( R.string.starting_gps),Toast.LENGTH_SHORT).show();
 			startGPS();
+			}else{
+				Toast.makeText(getApplicationContext(),getResources().getString(R.string.gps_disabled),Toast.LENGTH_LONG).show();
+			}
 		}
-		
 	}
 	
 	
@@ -424,7 +472,6 @@ public class MainActivity extends Activity {
         tvstatus.setText(status);
 		tvstatus =(TextView)findViewById(R.id.acbarFreetext);
         tvstatus.setText(freetext);
-		
     }
 
 
@@ -470,6 +517,7 @@ public class MainActivity extends Activity {
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
         lastdrag = drag;
         String ts=isoDateFormat.format(moment);
+		String csvline="";
 		try{
 			paramset.put("drop",URLEncoder.encode(drop));
             paramset.put("ts", URLEncoder.encode( ts));
@@ -482,8 +530,13 @@ public class MainActivity extends Activity {
             for(Map.Entry<String, String> entry : paramset.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                if (!(params.equals(""))) params = params + "&";
+                if (!(params.equals(""))) {
+					params = params + "&";
+					csvline = csvline+",";
+				}
                 params=params+key+"="+value;
+				csvline=csvline+value;
+				// TODO:.escape and quote value
             }
     	    new PostObservation().execute(paramset);
 		} catch (Exception e) {
@@ -492,10 +545,14 @@ public class MainActivity extends Activity {
 		freetext="";
 		try{
 		    FileOutputStream outputStream;
+			FileOutputStream CsvStream;
              try {
                 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
                 outputStream.write((params+"\n").getBytes());
                 outputStream.close();
+				CsvStream = openFileOutput(project+".csv", getApplicationContext().MODE_APPEND);
+				CsvStream.write((csvline+"\n").getBytes());
+				CsvStream.close();
              } catch (Exception e) {
                 e.printStackTrace();
              }
@@ -567,7 +624,7 @@ public class MainActivity extends Activity {
 	}
 		
 		
-		class MyDropListener implements OnDragListener {
+	class MyDropListener implements OnDragListener {
 		final Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		final Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
@@ -689,7 +746,7 @@ public class MainActivity extends Activity {
 											if (v.hasVibrator()) {
 												v.vibrate(500);
 											} else {
-												debug("Can Vibrate - NO");
+												debug("Cannot Vibrate");
 											}
 											}
 										}
@@ -796,7 +853,6 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(Long res){
 				if(status==0){
 					Toast.makeText(getApplicationContext()," upload error", Toast.LENGTH_SHORT).show();
-					
 				}
 			}
 
