@@ -52,4 +52,9 @@
 	<string name="unlock">Lås opp bekreft</string>
     <string name="gps_disabled">GPS ikke aktiv</string>
     <string name="commaSeparatedList">Kommaseparert liste</string>
+    <string name="copycsv">Kopier lagrede data</string>
+    <string name="menu_sendattachment">Send som vedlegg</string>
+    <string name="DataOnClipboard">Dataene kan limes inn</string>
+    <string name="emailsubject">Sender data fra</string>
+    <string name="emailbody">Data er vedlagt</string>
 </resources>

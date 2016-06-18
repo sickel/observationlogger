@@ -73,17 +73,23 @@ import java.util.Map;
 // DONE 1.6: Hide countdown timer if period=0
 // TODO: csv textlog of stored data
 // TODO: View log of stored data, export them
+// DONE 1.8: Copy log to clipboard
 // TODO: Send log by mail
+// DONE 1.8: Sending in body
+// TODO: Send log as attachment
 // TODO: create kml of observations
 // TODO: logfile pr project.
+// DONE
 // TODO: reset logfile from menu
+// TODO: ad hoc behaviour to be stored as new extra -
 // DONE 1.6: ad hoc behaviour in addition to freetext
-// TODO: ad hoc behaviour to be stored as new extra - 
 // TODO: new ad hoc pushed to other devices in same project
 // TODO: set comments in settings to show actual values
 // BUG: Cleardisplay does not work.
 // DONE: 1.7 Asks correctly for.permissions in android 6
-// TODO: Check if this causes problems in android 5
+// DONE: 1.7 Check if this causes problems in android 5
+// DONE: 1.8 added functionallity to not use secondary values
+
 
 public class MainActivity extends Activity {
 	LocationService lService;
@@ -114,7 +120,8 @@ public class MainActivity extends Activity {
 	private boolean quietMode = false;
 	private boolean useGPS = false;
 	private boolean keepUnlocked = false;
-	
+    private boolean usesec = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,8 +132,8 @@ public class MainActivity extends Activity {
 			try{
 				myTimerThread.setTime(lasttimestamp);
 				if(myTimerThread.getTime()>cleardisplay*3600){
-					// dont mind to display obs after cleardisplay hours hours
-					lastdrag="";
+                    // dont mind to display obs after cleardisplay hours
+                    lastdrag="";
 					lastdrop="";
 				}
 			}catch(java.text.ParseException e){
@@ -159,10 +166,8 @@ public class MainActivity extends Activity {
 							startGPS();
 							useGPS=true;
 					} else {
-
-						// permission denied, boo! Disable the
-						// functionality that depends on this permission.
-					}
+                        useGPS = false;
+                    }
 					return;
 				}
 
@@ -238,7 +243,8 @@ public class MainActivity extends Activity {
         urlString=sharedPrefs.getString("uploadURL", "");
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
-		// TODO: Check if <project>.csv exists if not - create it with a header line
+        usesec = sharedPrefs.getBoolean("useSecValues", true);
+        // TODO: Check if <project>.csv exists if not - create it with a header line
 		quietMode=sharedPrefs.getBoolean("prefQuietMode",false);
 		if(username.equals("")||project.equals("")){
 			debug(getResources().getString(R.string.errUsernameProject).toString());
@@ -361,11 +367,62 @@ public class MainActivity extends Activity {
 				Button btn=(Button)findViewById(R.id.btnConfirm);
 				btn.setEnabled(true);
 				keepUnlocked=true;
+                break;
+            case R.id.copycsv:
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                String copytext = csvtostring();
+                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", copytext);
+                clipboard.setPrimaryClip(clip);
+                debug(getResources().getString(R.string.DataOnClipboard));
+                break;
+            case R.id.menu_attachdata:
+                //      String filename=project+".csv";
+                //      File src= new File (getFilesDir(),filename);
+                //      File dst= new File (Environment.getExternalStorage().getAbsolutePath())
+                Intent in = new Intent(Intent.ACTION_SEND);
+                in.setType("text/plain");
+                in.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                in.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.emailsubject) + " " + project);
+                in.putExtra(Intent.EXTRA_TEXT, getString(R.string.emailbody) + "\n\n" + csvtostring());
+                try {
+                    startActivity(Intent.createChooser(in, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
         return true;
     }
 
-	
+    public String csvtostring() {
+        String result;
+        String filename = project + ".csv";
+        try {
+            File file = new File(getFilesDir(), filename);
+            long length = file.length();
+            if (length < 1 || length > Integer.MAX_VALUE) {
+                result = "";
+                debug("File is empty or huge: " + filename);
+            } else try {
+                FileReader in = new FileReader(file);
+                char[] content = new char[(int) length];
+                int numRead = in.read(content);
+                if (numRead != length) {
+                    debug("Incomplete read of " + file + ". Read chars " + numRead + " of " + length);
+                }
+                result = new String(content, 0, numRead);
+
+            } catch (Exception ex) {
+                debug("Failure reading " + filename);
+                result = "";
+            }
+        } catch (Exception ex) {
+            debug("File not found");
+            result = "";
+        }
+        return result;
+    }
+
 	public void toggleGPS(){
 		if(lServiceBound){
 			Toast.makeText(getApplicationContext(),getResources().getString( R.string.stopping_gps),Toast.LENGTH_SHORT).show();
@@ -536,8 +593,8 @@ public class MainActivity extends Activity {
             }
     	    new PostObservation().execute(paramset);
 		} catch (Exception e) {
-		    Toast.makeText(getApplicationContext(),"error 478 "+e,Toast.LENGTH_LONG).show();
-		}
+            Toast.makeText(getApplicationContext(), "error 541 " + e, Toast.LENGTH_LONG).show();
+        }
 		freetext="";
 		try{
 		    FileOutputStream outputStream;
@@ -546,7 +603,8 @@ public class MainActivity extends Activity {
                 outputStream = openFileOutput(savefile, getApplicationContext().MODE_APPEND);
                 outputStream.write((params+"\n").getBytes());
                 outputStream.close();
-				CsvStream = openFileOutput(project+".csv", getApplicationContext().MODE_APPEND);
+                 // debug(csvline); // REMOVE
+                 CsvStream = openFileOutput(project+".csv", getApplicationContext().MODE_APPEND);
 				CsvStream.write((csvline+"\n").getBytes());
 				CsvStream.close();
              } catch (Exception e) {
@@ -650,7 +708,7 @@ public class MainActivity extends Activity {
                     TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
                     String otime=timeDateFormat.format(moment);
                     lasttimestamp=isoDateFormat.format(moment);
-					if (ll.getChildAt(n - 1) == v) {
+                    if (usesec && ll.getChildAt(n - 1) == v) {
                         Intent i = new Intent(getApplicationContext(), itemList.class);
                         i.putExtra("lastdrag", t);
                         i.putExtra("lasttime", lasttimestamp);

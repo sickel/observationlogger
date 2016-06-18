@@ -13,4 +13,10 @@
     <item
         android:id="@+id/menu_togglegps"
         android:title="@string/menu_togglegps" />
+    <item
+        android:id="@+id/copycsv"
+        android:title="@string/copycsv" />
+    <item
+        android:id="@+id/menu_attachdata"
+        android:title="@string/menu_sendattachment" />
 </menu>

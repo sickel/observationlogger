@@ -9,8 +9,8 @@ android {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1070
-        versionName "1.7.0"
+        versionCode 1080
+        versionName "1.8.0"
     }
     buildTypes {
         release {

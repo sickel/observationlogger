@@ -55,4 +55,9 @@
     <string name="pref_logperiod">Log period (min)</string>
     <string name="till_next_obs">Until next:</string>
     <string name="commaSeparatedList">Comma separated list</string>
+    <string name="copycsv">Copy stored data</string>
+    <string name="menu_sendattachment">Send as attachment</string>
+    <string name="DataOnClipboard">Data on clipboard</string>
+    <string name="emailsubject">Sending data from</string>
+    <string name="emailbody">Please find attached</string>
 </resources>
