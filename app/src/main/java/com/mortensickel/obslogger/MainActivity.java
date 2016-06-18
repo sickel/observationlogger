@@ -1,14 +1,16 @@
 package com.mortensickel.obslogger;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.Manifest;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -16,7 +18,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -33,9 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.Color;
 
-import android.os.Vibrator;
 import com.mortensickel.obslogger.LocationService.LocalBinder;
 
 import java.io.BufferedReader;
@@ -47,6 +50,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,14 +58,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.net.*;
-import android.net.*;
-import java.security.acl.*;
-import android.content.res.*;
-import java.lang.Object;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.app.ActivityCompat;
-import android.content.pm.*;
 
 // DONE 1.6: unlock by menu to confirm upload
 // TODO: Demand project and user name before uploading

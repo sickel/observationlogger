@@ -50,4 +50,8 @@
 	<string name="errStaleGps">Stale GPSdata</string>
 	<string name="quietMode">Quiet mode - no vibration</string>
 	<string name="unlock">Unlock confirm</string>
+    <string name="gps_disabled">GPS disabled</string>
+    <string name="pref_cleardisplay">Max observation time (hours)</string>
+    <string name="till_next_obs">Until next:</string>
+    <string name="secnames">Secondary</string>
 </resources>

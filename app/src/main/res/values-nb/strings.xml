@@ -40,7 +40,7 @@
     <string name="valueSettings">Sett loggeverdier</string>
     <string name="valueSettings_summary">Sett loggeverdier</string>
     <string name="dragnames">240,242,244,245,260</string>
-    <string name="secnames"></string>
+    <string name="secnames">Sekundære</string>
     <string name="altnames">Drikker, Sloss</string>
 	<string name="till_next_obs">Til neste:</string>
 	<string name="pref_logperiod">Registreringsperiode (min)</string>
@@ -50,4 +50,5 @@
 	<string name="errStaleGps">For gamle GPSdata</string>
 	<string name="quietMode">Stille - ingen vibrasjon</string>
 	<string name="unlock">Lås opp bekreft</string>
+    <string name="gps_disabled">GPS ikke aktiv</string>
 </resources>

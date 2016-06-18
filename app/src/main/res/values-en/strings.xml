@@ -44,11 +44,14 @@
     <string name="GPSLocationNotAvailable">GPS location not available</string>
     <string name="setsNotUploaded">sets not uploaded</string>
     <string name="altnames">Drinking,Fighting,Dancing,Singing,Climbing,?????,Reading good old Larson comics,Sailing,Swimming,Out shopping,Sleeping</string>
-    <string name="secnames"></string>
+    <string name="secnames">Secondary</string>
 	<string name="errUsernameProject">Set username and project</string>
 	<string name="errTimeFormat">Time format error</string>
 	<string name="errStaleGps">Stale GPSdata</string>
 	<string name="quietMode">Quiet mode - no vibration</string>
 	<string name="unlock">Unlock confirm</string>
 	<string name="gps_disabled">GPS disabled</string>
+    <string name="pref_cleardisplay">Max observation time (hours)</string>
+    <string name="pref_logperiod">Log period (min)</string>
+    <string name="till_next_obs">Until next:</string>
 </resources>
