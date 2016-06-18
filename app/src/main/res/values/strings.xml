@@ -54,4 +54,5 @@
     <string name="pref_cleardisplay">Max observation time (hours)</string>
     <string name="till_next_obs">Until next:</string>
     <string name="secnames">Secondary</string>
+    <string name="commaSeparatedList">Comma separated list</string>
 </resources>

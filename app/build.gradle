@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1070
         versionName "1.7.0"
     }
@@ -16,6 +16,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            pseudoLocalesEnabled false
         }
         debug {
             pseudoLocalesEnabled true

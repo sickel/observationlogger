@@ -21,13 +21,13 @@
         android:summary="@string/valueSettings_summary"
         android:title="@string/valueSettings">
         <EditTextPreference
-            android:defaultValue=""
+            android:defaultValue="@string/dropnames"
             android:dialogTitle="@string/pref_drop_names"
             android:key="dropNames"
             android:summary="@string/pref_drop_names_summary"
             android:title="@string/pref_drop_names" />
         <EditTextPreference
-            android:defaultValue=""
+            android:defaultValue="@string/dragnames"
             android:dialogTitle="@string/pref_drag_names"
             android:key="dragNames"
             android:summary="@string/pref_drag_names_summary"
