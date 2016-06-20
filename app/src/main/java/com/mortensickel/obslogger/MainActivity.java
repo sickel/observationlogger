@@ -79,7 +79,8 @@ import java.util.Map;
 // TODO: Send log as attachment
 // TODO: create kml of observations
 // TODO: logfile pr project.
-// DONE
+// DONE: 1.6 <project>.csv
+// TODO: Overview of logfiles. possibility to erase or export.
 // TODO: reset logfile from menu
 // TODO: ad hoc behaviour to be stored as new extra -
 // DONE 1.6: ad hoc behaviour in addition to freetext
