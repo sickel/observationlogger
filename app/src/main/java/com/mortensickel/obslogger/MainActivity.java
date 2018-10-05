@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Map;
 
 // DONE 1.6: unlock by menu to confirm upload
+// TODO: Set time when dragging, not when confirming
+// TODO: Make use of confirm user select able
 // TODO: Demand project and user name before uploading
 // DONE 1.6: reminds of project and user name
 // TODO: Fetch settings data from server
@@ -102,7 +104,7 @@ public class MainActivity extends Activity {
     private String lasttimestamp = "";
     boolean lServiceBound=false;
 	private String urlString="http://sickel.net/obslog/store.php";
-	// view data at http://sickel.net/obslog/read.php
+	// view data at http://sickel.net/obslog/
     private boolean doUpload=true;
     private String savefile="observations.dat";
 	private String errorfile="errors.dat";
