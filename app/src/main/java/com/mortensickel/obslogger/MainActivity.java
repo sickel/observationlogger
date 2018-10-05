@@ -308,8 +308,14 @@ public class MainActivity extends Activity {
 			case (ACTIVITY_ITEMLIST) : { 
 				if (resultCode == Activity.RESULT_OK) { 
 					Bundle extras = i.getExtras();
-					if (extras.getString("lastdrop") != null) lastdrop = extras.getString("lastdrop");
-					if (extras.getString("lastdrag") != null) lastdrag = extras.getString("lastdrag");
+					if (extras.getString("lastdrop") != null) {
+					    lastdrop = extras.getString("lastdrop");
+					    dropped = lastdrop;
+                    }
+					if (extras.getString("lastdrag") != null){
+					    lastdrag = extras.getString("lastdrag");
+					    dragged = lastdrag;
+                    }
 					if (extras.getString("lasttime") != null) lasttimestamp = extras.getString("lasttime");
 					if (extras.getString("freetext") != null) freetext = extras.getString("freetext");	
 					Button bt = (Button) findViewById(R.id.btnConfirm);
@@ -717,10 +723,12 @@ public class MainActivity extends Activity {
                     String otime=timeDateFormat.format(moment);
                     lasttimestamp=isoDateFormat.format(moment);
                     if (usesec && ll.getChildAt(n - 1) == v) {
+                        // StartActivityForResult
                         Intent i = new Intent(getApplicationContext(), itemList.class);
                         i.putExtra("lastdrag", t);
                         i.putExtra("lasttime", lasttimestamp);
                         startActivityForResult(i, 0);
+                        // TODO: Get the value from the Intent into st - onactivityresult
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
                         st = ((TextView) sv).getText().toString();
