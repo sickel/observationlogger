@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 23
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1080
         versionName "1.8.0"
     }
@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     // compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:support-v4:23.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
 }

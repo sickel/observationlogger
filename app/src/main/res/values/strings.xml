@@ -60,4 +60,5 @@
     <string name="DataOnClipboard">Data on clipboard</string>
     <string name="emailsubject">Sending data from</string>
     <string name="emailbody">Please find attached</string>
+    <string name="txtLast">%1$s: %2$s %3$s</string>
 </resources>

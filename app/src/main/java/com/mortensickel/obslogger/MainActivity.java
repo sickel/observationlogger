@@ -288,7 +288,9 @@ public class MainActivity extends Activity {
 				otime=lasttimestamp;
 			}
 		}
-		txtLast.setText(otime + ": " + lastdrag + " " + lastdrop);
+		//txtLast.setText(otime + ": " + lastdrag + " " + lastdrop);
+        txtLast.setText(getString(R.string.txtLast,otime,lastdrag,lastdrop));
+
     }
 
     public void debug(String t){
@@ -582,7 +584,10 @@ public class MainActivity extends Activity {
         lastdrag = this.dragged;
         String ts=isoDateFormat.format(moment);
 		String csvline="";
-		try{
+        this.dragged=drag;
+        this.dropped=drop;
+
+        try{
 			paramset.put("drop",URLEncoder.encode(this.dropped));
             paramset.put("ts", URLEncoder.encode( ts));
             paramset.put("drag",URLEncoder.encode(this.dragged));
@@ -627,9 +632,9 @@ public class MainActivity extends Activity {
 		String otime=timeDateFormat.format(moment);
         lasttimestamp = isoDateFormat.format(moment);
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
-        txtLast.setText(otime + ": " + drag + " " + drop);
-        this.dragged=drag;
-        this.dropped=drop;
+        txtLast.setText(getString(R.string.txtLast,otime,drag,drop));
+
+   //     txtLast.setText(otime + ": " + drag + " " + drop);
         Integer lnum=0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -732,14 +737,16 @@ public class MainActivity extends Activity {
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
                         st = ((TextView) sv).getText().toString();
+                        lastdrop=st;
+                        dropped=st;
+
                     }
-					lastdrop=st;
-                    dropped=st;
-                    Button bt = (Button) findViewById(R.id.btnConfirm);
+					Button bt = (Button) findViewById(R.id.btnConfirm);
                     bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
 					bt.setEnabled(false);
-					txtLast.setText(otime+": "+t+" "+st);
+					//txtLast.setText(otime+": "+t+" "+st);
+                    txtLast.setText(getString(R.string.txtLast,otime,t,st));
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
                     if (APILEVEL>15) v.setBackground(normalShape);

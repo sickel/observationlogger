@@ -82,15 +82,15 @@ public class itemList extends Activity {
 
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,long id) {
-                TextView clickedView = (TextView) view;
-                Intent i = new Intent(view.getContext(), MainActivity.class);
-                i.putExtra("lastdrop", clickedView.getText());
-                i.putExtra("lastdrag", lastdrag);
-                i.putExtra("lasttime", lasttimestamp);
-				EditText et=(EditText)findViewById(R.id.observationText);
-				i.putExtra("freetext",et.getText().toString());
-       		    setResult(Activity.RESULT_OK,i);
-				finish();
+            TextView clickedView = (TextView) view;
+            Intent i = new Intent(view.getContext(), MainActivity.class);
+            i.putExtra("lastdrop", clickedView.getText());
+            i.putExtra("lastdrag", lastdrag);
+            i.putExtra("lasttime", lasttimestamp);
+            EditText et=(EditText)findViewById(R.id.observationText);
+            i.putExtra("freetext",et.getText().toString());
+            setResult(Activity.RESULT_OK,i);
+            finish();
             }
         });
         // See more at: http://www.survivingwithandroid.com/2012/09/listviewpart-1.html#sthash.vZYbPB7J.dpuf
