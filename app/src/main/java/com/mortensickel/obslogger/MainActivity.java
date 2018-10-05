@@ -97,6 +97,8 @@ public class MainActivity extends Activity {
     private static String LOGTAG="Obslogger";
     private String lastdrag = "";
     private String lastdrop = "";
+    private String dragged = "";
+    private String dropped = "";
     private String lasttimestamp = "";
     boolean lServiceBound=false;
 	private String urlString="http://sickel.net/obslog/store.php";
@@ -111,7 +113,7 @@ public class MainActivity extends Activity {
     private static final int APILEVEL= Build.VERSION.SDK_INT;
     private String uuid="";
     private String username="";
-	private String freetext="";;
+	private String freetext="";
     private int timeout=10;
 	private static final int ACTIVITY_ITEMLIST=0;
 	private SimpleDateFormat isoDateFormat=new SimpleDateFormat("yyyy-MM-dd+HH.mm.ss+z");
@@ -169,7 +171,6 @@ public class MainActivity extends Activity {
 					} else {
                         useGPS = false;
                     }
-					return;
 				}
 
 				// other 'case' lines to check for other
@@ -566,16 +567,17 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSLocationNotAvailable),Toast.LENGTH_LONG);
         }
         String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
+// TODO: Cannot read the values from the textview!
 		String drop=tv.substring(tv.lastIndexOf(" ")+1);
-        lastdrop = drop;
+        lastdrop = this.dropped;
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
-        lastdrag = drag;
+        lastdrag = this.dragged;
         String ts=isoDateFormat.format(moment);
 		String csvline="";
 		try{
-			paramset.put("drop",URLEncoder.encode(drop));
+			paramset.put("drop",URLEncoder.encode(this.dropped));
             paramset.put("ts", URLEncoder.encode( ts));
-            paramset.put("drag",URLEncoder.encode(drag));
+            paramset.put("drag",URLEncoder.encode(this.dragged));
 			paramset.put("uuid",uuid);
 			paramset.put("username",URLEncoder.encode( username));
 			paramset.put("project",URLEncoder.encode(project));
@@ -618,6 +620,8 @@ public class MainActivity extends Activity {
         lasttimestamp = isoDateFormat.format(moment);
         TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
         txtLast.setText(otime + ": " + drag + " " + drop);
+        this.dragged=drag;
+        this.dropped=drop;
         Integer lnum=0;
         try {
             lnum=linenumbers(new File(getFilesDir(), errorfile));
@@ -706,6 +710,7 @@ public class MainActivity extends Activity {
                     TextView tv = (TextView) event.getLocalState();
                     String t = tv.getText().toString();
 					lastdrag=t;
+					dragged=t;
                     TextView txtLast = (TextView) findViewById(R.id.tvLastObsType);
                     String otime=timeDateFormat.format(moment);
                     lasttimestamp=isoDateFormat.format(moment);
@@ -719,6 +724,7 @@ public class MainActivity extends Activity {
                         st = ((TextView) sv).getText().toString();
                     }
 					lastdrop=st;
+                    dropped=st;
                     Button bt = (Button) findViewById(R.id.btnConfirm);
                     bt.setEnabled(true);
 					bt=(Button)findViewById(R.id.btnUndo);
