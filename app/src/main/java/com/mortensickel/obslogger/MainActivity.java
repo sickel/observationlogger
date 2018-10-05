@@ -588,9 +588,9 @@ public class MainActivity extends Activity {
         this.dropped=drop;
 
         try{
-			paramset.put("drop",URLEncoder.encode(this.dropped));
+			paramset.put("drop",URLEncoder.encode(this.lastdrop));
             paramset.put("ts", URLEncoder.encode( ts));
-            paramset.put("drag",URLEncoder.encode(this.dragged));
+            paramset.put("drag",URLEncoder.encode(this.lastdrag));
 			paramset.put("uuid",uuid);
 			paramset.put("username",URLEncoder.encode( username));
 			paramset.put("project",URLEncoder.encode(project));
