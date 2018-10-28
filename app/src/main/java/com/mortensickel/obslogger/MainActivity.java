@@ -58,10 +58,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+// TODO: BUG: First data set is not uploaded
 // DONE 1.6: unlock by menu to confirm upload
 // TODO: Set time when dragging, not when confirming
-// TODO: Make use of confirm user select able
+// DONE: Make use of confirm user selectable
 // TODO: Demand project and user name before uploading
 // DONE 1.6: reminds of project and user name
 // TODO: Fetch settings data from server
@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
 	private String urlString="http://sickel.net/obslog/store.php";
 	// view data at http://sickel.net/obslog/
     private boolean doUpload=true;
+	private boolean useConfirm=true;
     private String savefile="observations.dat";
 	private String errorfile="errors.dat";
 	private String project="";
@@ -248,6 +249,7 @@ public class MainActivity extends Activity {
         username=sharedPrefs.getString("userName","");
         project=sharedPrefs.getString("projectName","");
         usesec = sharedPrefs.getBoolean("useSecValues", true);
+		useConfirm=sharedPrefs.getBoolean("confirmToUpload",true);
         // TODO: Check if <project>.csv exists if not - create it with a header line
 		quietMode=sharedPrefs.getBoolean("prefQuietMode",false);
 		if(username.equals("")||project.equals("")){
@@ -656,6 +658,8 @@ public class MainActivity extends Activity {
     }
 
 	
+	
+	
 	private final class MyTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -733,7 +737,7 @@ public class MainActivity extends Activity {
                         i.putExtra("lastdrag", t);
                         i.putExtra("lasttime", lasttimestamp);
                         startActivityForResult(i, 0);
-                        // TODO: Get the value from the Intent into st - onactivityresult
+                        //  Get the value from the Intent into st - onactivityresult
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
                         st = ((TextView) sv).getText().toString();
@@ -747,6 +751,7 @@ public class MainActivity extends Activity {
 					bt.setEnabled(false);
 					//txtLast.setText(otime+": "+t+" "+st);
                     txtLast.setText(getString(R.string.txtLast,otime,t,st));
+					if(!useConfirm) saveAct(v);
 					break;
 				case DragEvent.ACTION_DRAG_ENDED:
                     if (APILEVEL>15) v.setBackground(normalShape);

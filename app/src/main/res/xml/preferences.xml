@@ -9,6 +9,11 @@
             android:key="doUpload"
             android:summary="@string/upload"
             android:title="@string/upload" />
+		<CheckBoxPreference
+            android:defaultValue="true"
+            android:key="confirmToUpload"
+            android:summary="@string/pref_useConfirm"
+            android:title="@string/pref_useConfirm" />
         <EditTextPreference
             android:defaultValue="http://sickel.net/obslog/store.php"
             android:dependency="doUpload"
