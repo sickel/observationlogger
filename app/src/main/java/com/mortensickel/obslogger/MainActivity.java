@@ -63,6 +63,7 @@ import android.icu.text.*;
 // DONE 1.6: unlock by menu to confirm upload
 // TODO: Set time when dragging, not when confirming
 // DONE: Make use of confirm user selectable
+// TODO: Make use of "confirm" user select able
 // TODO: Demand project and user name before uploading
 // DONE 1.6: reminds of project and user name
 // TODO: Fetch settings data from server
@@ -593,7 +594,7 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSLocationNotAvailable),Toast.LENGTH_LONG);
         }
         String tv=((TextView)findViewById(R.id.tvLastObsType)).getText().toString();
-// TODO: Cannot read the values from the textview!
+// TODO: Clean up use of dropped / lastdrop and dragged / lastdrag
 		String drop=tv.substring(tv.lastIndexOf(" ")+1);
         lastdrop = this.dropped;
         String drag=tv.substring(tv.indexOf(":")+2,tv.lastIndexOf(" "));
@@ -752,6 +753,7 @@ public class MainActivity extends Activity {
                         i.putExtra("lasttime", lasttimestamp);
                         startActivityForResult(i, 0);
                         //  Get the value from the Intent into st - onactivityresult
+
                     } else {
                         Object sv = ((ViewGroup) v).getChildAt(0);
                         st = ((TextView) sv).getText().toString();
