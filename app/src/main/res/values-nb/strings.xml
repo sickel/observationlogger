@@ -57,4 +57,11 @@
     <string name="DataOnClipboard">Dataene kan limes inn</string>
     <string name="emailsubject">Sender data fra</string>
     <string name="emailbody">Data er vedlagt</string>
+    <string name="txtLast">%1$s: %2$s %3$s</string>
+    <string name="pref_useConfirm">Bruk \"Bekreft\" for å laste opp</string>
+    <string name="errNoEmailClient">Får ikke kontakt med epost app</string>
+    <string name="sendMail">Send epost</string>
+    <string name="errIncompleteRead">Kunne ikke lese %1$s. Leste  %2$s av %3$s tegn</string>
+    <string name="errFailureReading">Feil under lesing av %1$s</string>
+    <string name="errFileNotFound">Finner ikke filen %1$s</string>
 </resources>
