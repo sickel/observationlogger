@@ -62,4 +62,9 @@
     <string name="emailbody">Please find attached</string>
     <string name="txtLast">%1$s: %2$s %3$s</string>
 	<string name="pref_useConfirm">Confim to upload</string>
+	<string name="errNoEmailClient">Cannot connect to email client</string>
+	<string name="sendMail">Send mail</string>
+	<string name="errIncompleteRead">Incomplete read of %1$s. Read chars %2$s of %3$s</string>
+	<string name="errFailureReading">Failure reading %1$s</string>
+	<string name="errFileNotFound">File not found %1$s</string>
 </resources>

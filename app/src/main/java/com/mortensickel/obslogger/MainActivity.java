@@ -58,7 +58,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-// TODO: BUG: First data set is not uploaded
+import android.icu.text.*;
+// TODO: BUG: First data set is not uploaded? 
 // DONE 1.6: unlock by menu to confirm upload
 // TODO: Set time when dragging, not when confirming
 // DONE: Make use of confirm user selectable
@@ -71,6 +72,7 @@ import java.util.Map;
 // DONE 1.6: reset last saved 
 // DONE 1.6: bigger countdown timer
 // DONE 1.6: Use vibration when time for new observation - check on phone
+// TODO BUG Vibration does not work
 // DONE 1.6: silent mode
 // DONE 1.6: Hide countdown timer if period=0
 // TODO: csv textlog of stored data
@@ -79,11 +81,12 @@ import java.util.Map;
 // TODO: Send log by mail
 // DONE 1.8: Sending in body
 // TODO: Send log as attachment
-// TODO: create kml of observations
+// TODO: create kml of observations - works serversiden
 // TODO: logfile pr project.
 // DONE: 1.6 <project>.csv
 // TODO: Overview of logfiles. possibility to erase or export.
 // TODO: reset logfile from menu
+// TODO: clen up logfile
 // TODO: ad hoc behaviour to be stored as new extra -
 // DONE 1.6: ad hoc behaviour in addition to freetext
 // TODO: new ad hoc pushed to other devices in same project
@@ -401,7 +404,7 @@ public class MainActivity extends Activity {
                 try {
                     startActivity(Intent.createChooser(in, "Send mail..."));
                 } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.errNoEmailClient), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -420,14 +423,18 @@ public class MainActivity extends Activity {
             } else try {
                 FileReader in = new FileReader(file);
                 char[] content = new char[(int) length];
-                int numRead = in.read(content);
+                Integer numRead = in.read(content);
                 if (numRead != length) {
-                    debug("Incomplete read of " + file + ". Read chars " + numRead + " of " + length);
+                    //debug("Incomplete read of " + file + ". Read chars " + numRead + " of " + length);
+					//txtLast.setText(getString(R.string.txtLast,otime,lastdrag,lastdrop));
+					debug(getString(R.string.errIncompleteRead,filename,numRead.toString(),((Long)length).toString()));
+					
                 }
                 result = new String(content, 0, numRead);
 
             } catch (Exception ex) {
-                debug("Failure reading " + filename);
+                //debug("Failure reading " + filename);
+				debug(getString(R.string.errFailureReading,filename));
                 result = "";
             }
         } catch (Exception ex) {
@@ -566,11 +573,18 @@ public class MainActivity extends Activity {
 				if(age/60>5){
 				   throw new Exception(getResources().getString(R.string.errStaleGps));
 			  	}
+				
+				DecimalFormat rounddeg= new DecimalFormat("###.######");
+				DecimalFormat round1 =new DecimalFormat("#.#");
+				DecimalFormat round2 =new DecimalFormat("#.##");
+				
+				//paramset.put("age",String.valueOf(rounddeg.format(age)));
 				paramset.put("age",age.toString());
-				paramset.put("lat",String.valueOf(loc.getLatitude()));
-				paramset.put("lon",String.valueOf(loc.getLongitude()));
-				paramset.put("alt",String.valueOf(loc.getAltitude()));
-				paramset.put("acc",String.valueOf(loc.getAccuracy()));
+				paramset.put("lat",String.valueOf(rounddeg.format(loc.getLatitude())));
+				paramset.put("lon",String.valueOf(rounddeg.format(loc.getLongitude())));
+				paramset.put("alt",String.valueOf(round1.format(loc.getAltitude())));
+				//TODO: round numbers 
+				paramset.put("acc",String.valueOf(round1.format(loc.getAccuracy())));
 				paramset.put("gpstime",String.valueOf(loc.getTime()));
 	        }else{
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.GPSServiceNotAvailable),Toast.LENGTH_SHORT).show();
