@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.mortensickel.obslogger"
         minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 1080
-        versionName "1.8.0"
+        targetSdkVersion 27
+        versionCode 1081
+        versionName "1.8.1"
     }
     buildTypes {
         release {
